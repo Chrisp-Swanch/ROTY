@@ -1,10 +1,10 @@
 export interface UserModel {
   id: number
-  created_at: string
+  createdAt: string
   name: string
-  profile_image: string
-  previous_winner: boolean
-  is_deleted: boolean
+  profileImage: string
+  previousWinner: boolean
+  isDeleted: boolean
 }
 
 export interface NewUserModel {

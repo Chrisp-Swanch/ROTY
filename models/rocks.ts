@@ -1,13 +1,13 @@
 export interface RockModel {
   id: number
-  created_at: string
-  owner_id: number
+  createdAt: string
+  ownerId: number
   name: string
   description: string
   image: string
-  weight_division: string
+  weightDivision: string
   disqualified: boolean
-  is_deleted: boolean
+  isDeleted: boolean
 }
 
 export interface NewRockModel {
