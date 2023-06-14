@@ -9,6 +9,7 @@ exports.up = function (knex) {
     table.string('name')
     table.string('profile_image')
     table.boolean('previous_winner')
+    table.boolean('is_deleted')
   })
 }
 

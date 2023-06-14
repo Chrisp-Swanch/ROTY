@@ -7,6 +7,7 @@ export interface RockModel {
   image: string
   weight_division: string
   disqualified: boolean
+  is_deleted: boolean
 }
 
 export interface NewRockModel {

@@ -12,6 +12,7 @@ exports.up = function (knex) {
     table.string('image')
     table.string('weight_division')
     table.boolean('disqualified')
+    table.boolean('is_deleted')
   })
 }
 

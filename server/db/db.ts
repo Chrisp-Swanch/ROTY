@@ -1,5 +1,5 @@
 import connection from './connection'
-import { UserModel, NewUserModel } from '../../models/users'
+import { UserModel, NewUserModel, UpdateUserModel } from '../../models/users'
 import { RockModel } from '../../models/rocks'
 import { VoteModel } from '../../models/votes'
 
@@ -13,7 +13,7 @@ export function getAllUsers() {
 }
 
 export function getOneUser(id: number) {
-  return db('users').select('*').where('id', id).first()
+  return db('users').select('*').where({ id }).first()
 }
 
 // Users - Add
@@ -27,9 +27,15 @@ export function addUser(userData: NewUserModel) {
 }
 
 // Users - Update
-// export function updateUser(userData: UserModel, id: number) {
-//   return db('users').update()
-// }
+export function updateUser(updateData: UpdateUserModel, id: number) {
+  const { name, profile_image, previous_winner } = updateData
+  if (profile_image === null) profile_image
+  return db('users').select().where({ id }).first().update({
+    name,
+    profile_image,
+    previous_winner,
+  })
+}
 
 // deleterUser(id: number)
 

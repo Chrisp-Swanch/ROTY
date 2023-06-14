@@ -5,8 +5,12 @@ const router = express.Router()
 import * as db from '../db/db'
 
 // MODEL IMPORTS
-import { NewUserModel, UserModel } from '../../models/users'
+import { NewUserModel, UserModel, UpdateUserModel } from '../../models/users'
 
+// VARIABLES
+const noImagePath = '/images/icon-no-user-image.svg'
+
+// GET
 // Get all users
 router.get('/', async (req, res) => {
   const users = await db.getAllUsers()
@@ -17,13 +21,25 @@ router.get('/', async (req, res) => {
   }
 })
 
+// get a user by id
+router.get('/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  const user = await db.getOneUser(id)
+  try {
+    res.json(user)
+  } catch (err) {
+    res.sendStatus(500)
+  }
+})
+
+// POST
 // Add a new user
 router.post('/', async (req, res) => {
   const newUser = req.body as NewUserModel
 
   // set defaults for optional keys
   let prevWinner = false
-  let profImage = '/images/icon-no-user-image.svg'
+  let profImage = noImagePath
 
   // set optional keys if they exist
   if (newUser.previous_winner) {
@@ -49,10 +65,23 @@ router.post('/', async (req, res) => {
   }
 })
 
-// get a user by id
-router.get('/:id', async (req, res) => {
+// PATCH
+// Update user
+router.patch('/:id', async (req, res) => {
   const id = Number(req.params.id)
-  const user = await db.getOneUser(id)
+  let newUser = req.body as UpdateUserModel
+
+  // set image to default if overwritten with null, or blank
+  const image = newUser.profile_image
+  if (image === null || image === '') {
+    newUser = {
+      ...newUser,
+      profile_image: noImagePath,
+    }
+  }
+
+  // call the database
+  const user = await db.updateUser(newUser, id)
   try {
     res.json(user)
   } catch (err) {
