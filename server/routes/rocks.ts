@@ -4,9 +4,6 @@ const router = express.Router()
 
 import * as db from '../db/rocks'
 
-// MODEL IMPORTS
-import { NewRockModel, UpdateRockModel } from '../../models/rocks'
-
 // VARIABLES
 const noImagePath = '/images/icon-no-image.svg'
 
@@ -38,7 +35,7 @@ router.get('/:id', async (req, res) => {
 // POST
 // Add a new rock
 router.post('/', async (req, res) => {
-  const newRock = req.body as NewRockModel
+  const newRock = req.body
 
   // set defaults for optional key
   let image = noImagePath
@@ -69,7 +66,7 @@ router.post('/', async (req, res) => {
 // Update rock
 router.patch('/:id', async (req, res) => {
   const id = Number(req.params.id)
-  let newRock = req.body as UpdateRockModel
+  let newRock = req.body
 
   // set image to default if overwritten with null, or blank
   const image = newRock.image

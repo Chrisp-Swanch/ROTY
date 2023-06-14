@@ -4,9 +4,6 @@ const router = express.Router()
 
 import * as db from '../db/users'
 
-// MODEL IMPORTS
-import { NewUserModel, UpdateUserModel } from '../../models/users'
-
 // VARIABLES
 const noImagePath = '/images/icon-no-image.svg'
 
@@ -38,7 +35,7 @@ router.get('/:id', async (req, res) => {
 // POST
 // Add a new user
 router.post('/', async (req, res) => {
-  const newUser = req.body as NewUserModel
+  const newUser = req.body
 
   // set defaults for optional keys
   let prevWinner = false
@@ -72,7 +69,7 @@ router.post('/', async (req, res) => {
 // Update user
 router.patch('/:id', async (req, res) => {
   const id = Number(req.params.id)
-  let newUser = req.body as UpdateUserModel
+  let newUser = req.body
 
   // set image to default if overwritten with null, or blank
   const image = newUser.profile_image
