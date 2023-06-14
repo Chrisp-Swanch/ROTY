@@ -5,7 +5,7 @@ const router = express.Router()
 import * as db from '../db/users'
 
 // MODEL IMPORTS
-import { NewUserModel, UserModel, UpdateUserModel } from '../../models/users'
+import { NewUserModel, UpdateUserModel } from '../../models/users'
 
 // VARIABLES
 const noImagePath = '/images/icon-no-user-image.svg'

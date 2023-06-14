@@ -17,3 +17,10 @@ export interface NewRockModel {
   image: string
   weight_division: string
 }
+export interface UpdateRockModel {
+  name?: string
+  description?: string
+  image?: string
+  weight_division?: string
+  is_deleted?: boolean
+}

@@ -1,7 +1,5 @@
 import connection from './connection'
-import { UserModel, NewUserModel, UpdateUserModel } from '../../models/users'
-import { RockModel } from '../../models/rocks'
-import { VoteModel } from '../../models/votes'
+import { NewUserModel, UpdateUserModel } from '../../models/users'
 
 const db = connection
 
@@ -46,14 +44,3 @@ export function updateUser(updateData: UpdateUserModel, id: number) {
 export function deleterUser(id: number) {
   return db('users').delete().where({ id })
 }
-
-// ROCKS
-
-// getAllRocks
-// getOneRock(id: number)
-
-// addRock(rockData: RockModel)
-// updateRock(rockData: RockModel, id: number)
-// deleterRock(id: number)
-
-// castVote(vote: VoteModel)
