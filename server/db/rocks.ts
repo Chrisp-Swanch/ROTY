@@ -42,6 +42,6 @@ export function updateRock(updateData: UpdateRockModel, id: number) {
 }
 
 // Rocks - Delete
-export function deleterRock(id: number) {
+export function deleteRock(id: number) {
   return db('rocks').delete().where({ id })
 }

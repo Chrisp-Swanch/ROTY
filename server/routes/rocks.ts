@@ -2,67 +2,62 @@ import express from 'express'
 
 const router = express.Router()
 
-import * as db from '../db/users'
+import * as db from '../db/rocks'
 
 // MODEL IMPORTS
-import { NewUserModel, UpdateUserModel } from '../../models/users'
+import { NewRockModel, UpdateRockModel } from '../../models/rocks'
 
 // VARIABLES
 const noImagePath = '/images/icon-no-image.svg'
 
 // GET
-// Get all users
+// Get all rocks
 router.get('/', async (req, res) => {
   // call the database
-  const users = await db.getAllUsers()
+  const rocks = await db.getAllRocks()
   try {
-    res.json(users)
+    res.json(rocks)
   } catch (err) {
     res.sendStatus(500)
   }
 })
 
-// get a user by id
+// get a rock by id
 router.get('/:id', async (req, res) => {
   const id = Number(req.params.id)
 
   // call the database
-  const user = await db.getOneUser(id)
+  const rock = await db.getOneRock(id)
   try {
-    res.json(user)
+    res.json(rock)
   } catch (err) {
     res.sendStatus(500)
   }
 })
 
 // POST
-// Add a new user
+// Add a new rock
 router.post('/', async (req, res) => {
-  const newUser = req.body as NewUserModel
+  const newRock = req.body as NewRockModel
 
-  // set defaults for optional keys
-  let prevWinner = false
-  let profImage = noImagePath
+  // set defaults for optional key
+  let image = noImagePath
 
-  // set optional keys if they exist
-  if (newUser.previous_winner) {
-    prevWinner = newUser.previous_winner
-  }
-  if (newUser.profile_image) {
-    profImage = newUser.profile_image
+  // set optional key if it exists
+  if (newRock.image) {
+    image = newRock.image
   }
 
-  // create the final new user object
-  const addUser = {
-    ...newUser,
-    previous_winner: prevWinner,
-    profile_image: profImage,
+  // create the final new rock object
+  const addRock = {
+    ...newRock,
+    image,
   }
 
   // call the database
-  const user = await db.addUser(addUser)
+  const rock = await db.addRock(addRock)
   try {
-    res.json(user)
+    res.json(rock)
   } catch (err) {
     res.sendStatus(500)
   }
@@ -72,21 +67,21 @@ router.post('/', async (req, res) => {
 // Update user
 router.patch('/:id', async (req, res) => {
   const id = Number(req.params.id)
-  let newUser = req.body as UpdateUserModel
+  let newRock = req.body as UpdateRockModel
 
   // set image to default if overwritten with null, or blank
-  const image = newUser.profile_image
+  const image = newRock.image
   if (image === null || image === '') {
-    newUser = {
-      ...newUser,
-      profile_image: noImagePath,
+    newRock = {
+      ...newRock,
+      image: noImagePath,
     }
   }
 
   // call the database
-  const user = await db.updateUser(newUser, id)
+  const rock = await db.updateRock(newRock, id)
   try {
-    res.json(user)
+    res.json(rock)
   } catch (err) {
     res.sendStatus(500)
   }
@@ -98,7 +93,7 @@ router.delete('/:id', async (req, res) => {
   const id = Number(req.params.id)
 
   // call the database
-  await db.deleterUser(id)
+  await db.deleteRock(id)
   try {
     res.sendStatus(204)
   } catch (err) {
