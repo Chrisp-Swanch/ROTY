@@ -5,6 +5,9 @@ import { VoteModel } from '../../models/votes'
 
 const db = connection
 
+// USERS
+
+// Users - Read
 export function getAllUsers() {
   return db('users').select('*')
 }
@@ -13,6 +16,7 @@ export function getOneUser(id: number) {
   return db('users').select('*').where('id', id).first()
 }
 
+// Users - Add
 export function addUser(userData: NewUserModel) {
   return db('users')
     .insert({
@@ -22,8 +26,14 @@ export function addUser(userData: NewUserModel) {
     .returning('*')
 }
 
-// updateUser(userData: UserModel, id: number)
+// Users - Update
+// export function updateUser(userData: UserModel, id: number) {
+//   return db('users').update()
+// }
+
 // deleterUser(id: number)
+
+// ROCKS
 
 // getAllRocks
 // getOneRock(id: number)
