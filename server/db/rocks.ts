@@ -26,7 +26,14 @@ export function getOneRock(id: number) {
 
 // Rocks - Update
 export function updateRock(updateData: UpdateRockModel, id: number) {
-  const { name, description, image, weight_division, is_deleted } = updateData
+  const {
+    name,
+    description,
+    image,
+    weight_division,
+    disqualified,
+    is_deleted,
+  } = updateData
   return db('rocks')
     .select()
     .where({ id })
@@ -36,6 +43,7 @@ export function updateRock(updateData: UpdateRockModel, id: number) {
       description,
       image,
       weight_division,
+      disqualified,
       is_deleted,
     })
     .returning('*')

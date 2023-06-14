@@ -22,5 +22,6 @@ export interface UpdateRockModel {
   description?: string
   image?: string
   weight_division?: string
+  disqualified?: boolean
   is_deleted?: boolean
 }

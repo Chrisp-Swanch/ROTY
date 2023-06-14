@@ -52,6 +52,8 @@ router.post('/', async (req, res) => {
   const addRock = {
     ...newRock,
     image,
+    disqualified: false,
+    is_deleted: false,
   }
 
   // call the database
@@ -64,7 +66,7 @@ router.post('/', async (req, res) => {
 })
 
 // PATCH
-// Update user
+// Update rock
 router.patch('/:id', async (req, res) => {
   const id = Number(req.params.id)
   let newRock = req.body as UpdateRockModel
@@ -88,7 +90,7 @@ router.patch('/:id', async (req, res) => {
 })
 
 // DELETE
-// Delete user
+// Delete rock
 router.delete('/:id', async (req, res) => {
   const id = Number(req.params.id)
 

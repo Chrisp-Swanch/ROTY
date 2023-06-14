@@ -16,6 +16,7 @@ exports.seed = async function (knex) {
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTktckLlDpbYJWcj60hZcubQVuxVjAMNfOJXNK0_Ewv_vU0O6S2ENGzeDAho2NHMvxIyp0&usqp=CAU',
       weight_division: 'Middleweight',
       disqualified: false,
+      is_deleted: false,
     },
     {
       id: 2,
@@ -27,6 +28,7 @@ exports.seed = async function (knex) {
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDtOVmKAMSRivthNb5sO8Y6ITVtGmMQhFlUA&usqp=CAU',
       weight_division: 'Lightweight',
       disqualified: false,
+      is_deleted: false,
     },
     {
       id: 3,
@@ -38,6 +40,7 @@ exports.seed = async function (knex) {
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgTQE7q6YB8o6TXGaR_STDfeQCA1Lk5_cAkQ&usqp=CAU',
       weight_division: 'Lightweight',
       disqualified: false,
+      is_deleted: false,
     },
     {
       id: 4,
@@ -49,6 +52,7 @@ exports.seed = async function (knex) {
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUBcc4akME-gY_W73uKrTKJp9NYZorHH_1KQ&usqp=CAU',
       weight_division: 'Middleweight',
       disqualified: false,
+      is_deleted: false,
     },
     {
       id: 5,
@@ -61,6 +65,7 @@ exports.seed = async function (knex) {
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFEDW0e4pyaM4FZ1E_sRmmBZO0tYgKfT310A&usqp=CAU',
       weight_division: 'Super Heavyweight',
       disqualified: true,
+      is_deleted: false,
     },
     {
       id: 6,
@@ -73,6 +78,7 @@ exports.seed = async function (knex) {
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJMllzCKzL4Ym7-ua86kAwsTlfkBPzdYDS3w&usqp=CAU',
       weight_division: 'Middleweight',
       disqualified: false,
+      is_deleted: false,
     },
     {
       id: 7,
@@ -85,6 +91,7 @@ exports.seed = async function (knex) {
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSA3-YGCwtiFoJhzADeJaGo6YtumEYNI2lhDQ&usqp=CAU',
       weight_division: 'Heavyweight',
       disqualified: false,
+      is_deleted: false,
     },
     {
       id: 8,
@@ -97,6 +104,7 @@ exports.seed = async function (knex) {
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIksYFUOOR6U9_tTSE2uIJbJ0qFhaR8rOv8dhWN9uuAhe38nTEcmWtrDjGf3c3iX87XtE&usqp=CAU',
       weight_division: 'Flyweight',
       disqualified: false,
+      is_deleted: false,
     },
     {
       id: 9,
@@ -109,6 +117,7 @@ exports.seed = async function (knex) {
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGTNbfLQsFztutiujRx8uBRel4vByNDvhiKA&usqp=CAU',
       weight_division: 'Lightweight',
       disqualified: false,
+      is_deleted: false,
     },
   ])
 }
