@@ -7,16 +7,7 @@ const db = connection
 
 // USERS
 
-// Users - Read
-export function getAllUsers() {
-  return db('users').select('*')
-}
-
-export function getOneUser(id: number) {
-  return db('users').select('*').where({ id }).first()
-}
-
-// Users - Add
+// Users - Create
 export function addUser(userData: NewUserModel) {
   return db('users')
     .insert({
@@ -26,18 +17,35 @@ export function addUser(userData: NewUserModel) {
     .returning('*')
 }
 
-// Users - Update
-export function updateUser(updateData: UpdateUserModel, id: number) {
-  const { name, profile_image, previous_winner } = updateData
-  if (profile_image === null) profile_image
-  return db('users').select().where({ id }).first().update({
-    name,
-    profile_image,
-    previous_winner,
-  })
+// Users - Read
+export function getAllUsers() {
+  return db('users').select('*')
 }
 
-// deleterUser(id: number)
+export function getOneUser(id: number) {
+  return db('users').select('*').where({ id }).first()
+}
+
+// Users - Update
+export function updateUser(updateData: UpdateUserModel, id: number) {
+  const { name, profile_image, previous_winner, is_deleted } = updateData
+  return db('users')
+    .select()
+    .where({ id })
+    .first()
+    .update({
+      name,
+      profile_image,
+      previous_winner,
+      is_deleted,
+    })
+    .returning('*')
+}
+
+// Users - Delete
+export function deleterUser(id: number) {
+  return db('users').delete().where({ id })
+}
 
 // ROCKS
 
