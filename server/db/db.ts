@@ -1,5 +1,5 @@
 import connection from './connection'
-import { UserModel } from '../../models/users'
+import { UserModel, NewUserModel } from '../../models/users'
 import { RockModel } from '../../models/rocks'
 import { VoteModel } from '../../models/votes'
 
@@ -13,7 +13,15 @@ export function getOneUser(id: number) {
   return db('users').select('*').where('id', id).first()
 }
 
-// addUser(userData: UserModel)
+export function addUser(userData: NewUserModel) {
+  return db('users')
+    .insert({
+      ...userData,
+      created_at: Number(new Date(Date.now())),
+    })
+    .returning('*')
+}
+
 // updateUser(userData: UserModel, id: number)
 // deleterUser(id: number)
 

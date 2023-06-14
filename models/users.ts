@@ -3,11 +3,11 @@ export interface UserModel {
   created_at: string
   name: string
   profile_image: string
-  previous_wins: boolean
+  previous_winner: boolean
 }
 
 export interface NewUserModel {
   name: string
-  profile_image: string
-  previous_wins?: boolean
+  profile_image?: string
+  previous_winner?: boolean
 }
