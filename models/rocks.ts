@@ -14,13 +14,13 @@ export interface NewRockModel {
   owner_id: number
   name: string
   description: string
-  image: string
+  image: string | null
   weight_division: string
 }
 export interface UpdateRockModel {
   name?: string
   description?: string
-  image?: string
+  image?: string | null
   weight_division?: string
   disqualified?: boolean
   is_deleted?: boolean

@@ -9,13 +9,13 @@ export interface UserModel {
 
 export interface NewUserModel {
   name: string
-  profile_image?: string
+  profile_image?: string | null
   previous_winner?: boolean
 }
 
 export interface UpdateUserModel {
   name?: string
-  profile_image?: string
+  profile_image?: string | null
   previous_winner?: boolean
   is_deleted?: boolean
 }

@@ -1,5 +1,6 @@
 import express from 'express'
-import { NewRockModel, RockModel } from '../../models/rocks'
+import { NewRockModel } from '../../models/rocks'
+import { checkNewRock, checkUpdateRock, validate } from '../server-utils'
 
 const router = express.Router()
 
@@ -38,6 +39,10 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   const newRock = req.body as NewRockModel
 
+  if (!validate(checkNewRock(newRock))) {
+    res.sendStatus(500)
+    return
+  }
 
   // set defaults for optional key
   let image = noImagePath
@@ -69,6 +74,11 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   const id = Number(req.params.id)
   let newRock = req.body
+
+  if (!validate(checkUpdateRock(newRock))) {
+    res.sendStatus(500)
+    return
+  }
 
   // set image to default if overwritten with null, or blank
   const image = newRock.image

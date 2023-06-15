@@ -1,4 +1,6 @@
 import express from 'express'
+import { NewUserModel, UpdateUserModel } from '../../models/users'
+import { checkNewUser, checkUpdateUser, validate } from '../server-utils'
 
 const router = express.Router()
 
@@ -35,7 +37,12 @@ router.get('/:id', async (req, res) => {
 // POST
 // Add a new user
 router.post('/', async (req, res) => {
-  const newUser = req.body
+  const newUser = req.body as NewUserModel
+
+  if (!validate(checkNewUser(newUser))) {
+    res.sendStatus(500)
+    return
+  }
 
   // set defaults for optional keys
   let prevWinner = false
@@ -69,7 +76,12 @@ router.post('/', async (req, res) => {
 // Update user
 router.patch('/:id', async (req, res) => {
   const id = Number(req.params.id)
-  let newUser = req.body
+  let newUser = req.body as UpdateUserModel
+
+  if (!validate(checkUpdateUser(newUser))) {
+    res.sendStatus(500)
+    return
+  }
 
   // set image to default if overwritten with null, or blank
   const image = newUser.profile_image
