@@ -1,4 +1,5 @@
 import express from 'express'
+import { NewRockModel, RockModel } from '../../models/rocks'
 
 const router = express.Router()
 
@@ -35,7 +36,8 @@ router.get('/:id', async (req, res) => {
 // POST
 // Add a new rock
 router.post('/', async (req, res) => {
-  const newRock = req.body
+  const newRock = req.body as NewRockModel
+
 
   // set defaults for optional key
   let image = noImagePath
@@ -56,7 +58,7 @@ router.post('/', async (req, res) => {
   // call the database
   const rock = await db.addRock(addRock)
   try {
-    res.json(rock)
+    res.json(rock[0])
   } catch (err) {
     res.sendStatus(500)
   }
@@ -80,7 +82,7 @@ router.patch('/:id', async (req, res) => {
   // call the database
   const rock = await db.updateRock(newRock, id)
   try {
-    res.json(rock)
+    res.json(rock[0])
   } catch (err) {
     res.sendStatus(500)
   }

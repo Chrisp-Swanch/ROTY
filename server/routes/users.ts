@@ -59,7 +59,7 @@ router.post('/', async (req, res) => {
   // call the database
   const user = await db.addUser(addUser)
   try {
-    res.json(user)
+    res.json(user[0])
   } catch (err) {
     res.sendStatus(500)
   }
@@ -83,7 +83,7 @@ router.patch('/:id', async (req, res) => {
   // call the database
   const user = await db.updateUser(newUser, id)
   try {
-    res.json(user)
+    res.json(user[0])
   } catch (err) {
     res.sendStatus(500)
   }
