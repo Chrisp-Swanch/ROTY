@@ -16,7 +16,7 @@ export type Result = {
 export function validate(result: Result) {
   if (result.pass == true) return true
   console.log(
-    `\n-----------------------------\n
+    `\n-----------------------------
     \nHttp request body is invaild:\n`
   )
   result.errors.forEach((msg, i) => {
