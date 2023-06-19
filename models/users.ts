@@ -1,10 +1,10 @@
-export interface UserModel {
+export interface UserModelSnakeCase {
   id: number
-  createdAt: string
+  created_at: string
   name: string
-  profileImage: string
-  previousWinner: boolean
-  isDeleted: boolean
+  profile_image: string
+  previous_winner: boolean
+  is_deleted: boolean
 }
 
 export interface NewUserModel {

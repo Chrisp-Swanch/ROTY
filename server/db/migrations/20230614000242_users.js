@@ -6,11 +6,11 @@ exports.up = function (knex) {
   return knex.schema
     .createTable('users', function (table) {
       table.increments('id').primary()
-      table.timestamp('created_at')
+      table.timestamp('created_at').defaultTo(Date.now())
       table.string('name')
-      table.string('profile_image')
-      table.boolean('previous_winner')
-      table.boolean('is_deleted')
+      table.string('profile_image').defaultTo(null)
+      table.boolean('previous_winner').defaultTo(false)
+      table.boolean('is_deleted').defaultTo(false)
     })
     .then(() => {
       return knex.schema.alterTable('users', function (table) {

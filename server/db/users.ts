@@ -1,31 +1,33 @@
 import connection from './connection'
-import type { UserModel, NewUserModel, UpdateUserModel } from '../../models/users'
+import type {
+  UserModelSnakeCase,
+  NewUserModel,
+  UpdateUserModel,
+} from '../../models/users'
 
 const db = connection
 
 // USERS
 
 // Users - Create
-export function addUser(userData: NewUserModel): Promise<UserModel[]> {
-  return db('users')
-    .insert({
-      ...userData,
-      created_at: Number(new Date(Date.now())),
-    })
-    .returning('*')
+export function addUser(userData: NewUserModel): Promise<UserModelSnakeCase[]> {
+  return db('users').insert(userData).returning('*')
 }
 
 // Users - Read
-export function getAllUsers(): Promise<UserModel[]> {
+export function getAllUsers(): Promise<UserModelSnakeCase[]> {
   return db('users').select('*')
 }
 
-export function getOneUser(id: number): Promise<UserModel> {
+export function getOneUser(id: number): Promise<UserModelSnakeCase> {
   return db('users').select('*').where({ id }).first()
 }
 
 // Users - Update
-export function updateUser(updateData: UpdateUserModel, id: number): Promise<UserModel[]> {
+export function updateUser(
+  updateData: UpdateUserModel,
+  id: number
+): Promise<UserModelSnakeCase[]> {
   const { name, profile_image, previous_winner, is_deleted } = updateData
   return db('users')
     .select()

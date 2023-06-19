@@ -8,7 +8,7 @@ exports.seed = async function (knex) {
   await knex('rocks').insert([
     {
       id: 1,
-      created_at: Number(new Date(Date.now())),
+      created_at: 1687147209343,
       owner_id: 1,
       name: 'Rock of Ages',
       description: 'A beautiful collection of sand-coloured stones',
@@ -20,7 +20,7 @@ exports.seed = async function (knex) {
     },
     {
       id: 2,
-      created_at: Number(new Date(Date.now())),
+      created_at: 1687147209343,
       owner_id: 1,
       name: 'Rocky III',
       description: 'Wild-foraged greywacke with strong eye-contact',
@@ -32,7 +32,7 @@ exports.seed = async function (knex) {
     },
     {
       id: 3,
-      created_at: Number(new Date(Date.now())),
+      created_at: 1687147209343,
       owner_id: 2,
       name: 'Shiny Boi',
       description: 'A metallic rock found on a nearby asteroid',
@@ -44,7 +44,7 @@ exports.seed = async function (knex) {
     },
     {
       id: 4,
-      created_at: Number(new Date(Date.now())),
+      created_at: 1687147209343,
       owner_id: 3,
       name: 'Rocky Balboa',
       description: 'Rose-tinted and rough, this rock is not to be messed with',
@@ -56,7 +56,7 @@ exports.seed = async function (knex) {
     },
     {
       id: 5,
-      created_at: Number(new Date(Date.now())),
+      created_at: 1687147209343,
       owner_id: 4,
       name: 'Primordial Ooze',
       description:
@@ -69,7 +69,7 @@ exports.seed = async function (knex) {
     },
     {
       id: 6,
-      created_at: Number(new Date(Date.now())),
+      created_at: 1687147209343,
       owner_id: 4,
       name: "Dragon's Egg",
       description:
@@ -82,7 +82,7 @@ exports.seed = async function (knex) {
     },
     {
       id: 7,
-      created_at: Number(new Date(Date.now())),
+      created_at: 1687147209343,
       owner_id: 4,
       name: 'RoundBoi',
       description:
@@ -95,7 +95,7 @@ exports.seed = async function (knex) {
     },
     {
       id: 8,
-      created_at: Number(new Date(Date.now())),
+      created_at: 1687147209343,
       owner_id: 5,
       name: 'Circle of Life',
       description:
@@ -108,7 +108,7 @@ exports.seed = async function (knex) {
     },
     {
       id: 9,
-      created_at: Number(new Date(Date.now())),
+      created_at: 1687147209343,
       owner_id: 5,
       name: 'Ivar the Great and Terrible',
       description:

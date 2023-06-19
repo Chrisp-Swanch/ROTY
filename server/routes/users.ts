@@ -1,13 +1,14 @@
 import express from 'express'
 import { NewUserModel, UpdateUserModel } from '../../models/users'
-import { checkNewUser, checkUpdateUser, validate } from '../server-utils'
+import {
+  checkNewUser,
+  checkUpdateUser,
+  validate,
+} from '../server-utils'
 
 const router = express.Router()
 
 import * as db from '../db/users'
-
-// VARIABLES
-const noImagePath = '/images/icon-no-image.svg'
 
 // GET
 // Get all users
@@ -45,28 +46,28 @@ router.post('/', async (req, res) => {
   }
 
   // set defaults for optional keys
-  let prevWinner = false
-  let profImage = noImagePath
+  // let prevWinner = false
+  // let profImage = noImagePath
 
   // set optional keys if they exist
-  if (newUser.previous_winner) {
-    prevWinner = newUser.previous_winner
-  }
-  if (newUser.profile_image) {
-    profImage = newUser.profile_image
-  }
+  // if (newUser.previous_winner) {
+  //   prevWinner = newUser.previous_winner
+  // }
+  // if (newUser.profile_image) {
+  //   profImage = newUser.profile_image
+  // }
 
   // create the final new user object
-  const addUser = {
-    ...newUser,
-    previous_winner: prevWinner,
-    profile_image: profImage,
-  }
+  // const addUser = {
+  //   ...newUser,
+  //   previous_winner: prevWinner,
+  //   profile_image: profImage,
+  // }
 
   // call the database
-  const user = await db.addUser(addUser)
+  const user = await db.addUser(newUser)
   try {
-    res.json(user[0])
+    res.json(user)
   } catch (err) {
     res.sendStatus(500)
   }
