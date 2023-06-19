@@ -73,6 +73,26 @@ export function checkNewUser(incoming: UserModels.NewUserModel): Result {
     errors: [],
   }
 
+  // Type
+  const incomingKeys = Object.keys(incoming)
+  const validKeys = ['name', 'profile_image', 'previous_winner']
+  const requiredKeys = ['name']
+  // contains required keys
+  requiredKeys.forEach((key) => {
+    if (!incomingKeys.includes(key)) {
+      result.errors.push(`request must include a '${key}' key`)
+    }
+  })
+  // returns result immediately if required keys not found
+  if (result.errors[0]) return result
+
+  // contains only allowed keys
+  incomingKeys.forEach((key) => {
+    if (!validKeys.includes(key)) {
+      result.errors.push(`'${key}' is not a valid key`)
+    }
+  })
+
   // Name property
   // exists
   if (!incoming.name) {

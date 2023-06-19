@@ -36,7 +36,7 @@ describe('Test environment working', () => {
 
 describe('Users Db functions', () => {
   // GET all users
-  it('Retrieves all users', async () => {
+  it('Retrieves all users in array', async () => {
     expect.assertions(2)
     const result = await users.getAllUsers()
 
@@ -53,7 +53,7 @@ describe('Users Db functions', () => {
   })
 
   // GET one user by id
-  it('Retrieves one user when given id param', async () => {
+  it('Retrieves one user (as single object) when given id param', async () => {
     expect.assertions(1)
     const result = await users.getOneUser(3)
 
@@ -68,7 +68,7 @@ describe('Users Db functions', () => {
     })
   })
 
-  it('Adds a user', async () => {
+  it('Adds a user and returns new user in array', async () => {
     expect.assertions(2)
 
     const newUser = {
