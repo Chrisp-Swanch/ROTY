@@ -6,13 +6,13 @@ import * as RockModels from '../models/rocks'
 // FUNCTIONS TO VALIDATE IMCOMING REQUESTS AGAINST EXPECTED TYPES
 //----------------------------------------------------------------
 
-// Type for check results
+// Type for results, containing pass/fail bool and relevant errors
 export type Result = {
   pass: boolean
   errors: string[]
 }
 
-// Request-validation response
+// Error printing
 export function validate(result: Result) {
   if (result.pass == true) return true
   console.log(
@@ -23,6 +23,24 @@ export function validate(result: Result) {
     console.log(`${i + 1}) ${msg}`)
   })
   return false
+}
+
+// Makes a string out of an array,
+// eg. func(['Apples', 'Oranges', 'Pears'], 'and') => "'Apples', 'Oranges' and 'Pears'"
+function arrayToString(array: string[], andOr?: string): string {
+  let output = ''
+  for (let i = 0; i < array.length; i++) {
+    if (i == array.length - 1 && andOr) {
+      output = `${output}${andOr} '${array[i]}'`
+    } else {
+      if (i == array.length - 1) {
+        output = `${output}'${array[i]}'`
+      } else {
+        output = `${output}'${array[i]}', `
+      }
+    }
+  }
+  return output
 }
 
 // Variables to set constraints for keys
@@ -36,14 +54,76 @@ const weightDivisions = [
   'Heavyweight',
   'Super Heavyweight',
 ] // Valid weight divisions
-let validDivs = ''
-for (let i = 0; i < weightDivisions.length; i++) {
-  if (i == weightDivisions.length - 1) {
-    validDivs = `${validDivs}and '${weightDivisions[i]}'`
-  } else {
-    validDivs = `${validDivs}'${weightDivisions[i]}', `
+const validDivs = arrayToString(weightDivisions, 'and')
+
+// Generic key-checking function
+export function checkKeys(
+  request: object,
+  required: string[],
+  valid: string[]
+): Result {
+  const result: Result = {
+    pass: false,
+    errors: [],
   }
-} // Valid weight divisions as a string
+
+  const requestKeys = Object.keys(request)
+  // contains required keys
+  required.forEach((key) => {
+    if (!requestKeys.includes(key)) {
+      result.errors.push(`request must include a '${key}' key`)
+    }
+  })
+  // contains only valid keys
+  requestKeys.forEach((key) => {
+    if (!valid.includes(key)) {
+      result.errors.push(`'${key}' is not a valid key`)
+    }
+  })
+
+  // Pass if no errors
+  if (!result.errors[0]) {
+    result.pass = true
+    return result
+  }
+  return result
+}
+
+// Individual type checking functions
+export function checkType(
+  key: string,
+  val: string,
+  expectedTypes: string | string[]
+): Result {
+  const result: Result = {
+    pass: false,
+    errors: [],
+  }
+
+  // If multiple types allowed, check that input type is valid
+  if (typeof expectedTypes != 'string' && !expectedTypes.includes(val)) {
+    result.errors.push(
+      `'${key}' property should be of types ${arrayToString(
+        expectedTypes as string[],
+        'or'
+      )}, instead recieved '${val}'`
+    )
+  }
+
+  // Check if input type matches expected, if only one allowed
+  if (typeof expectedTypes === 'string' && val !== expectedTypes) {
+    result.errors.push(
+      `'${key}' property should be of type '${expectedTypes}', instead recieved '${val}'`
+    )
+  }
+
+  // Pass if no errors
+  if (!result.errors[0]) {
+    result.pass = true
+    return result
+  }
+  return result
+}
 
 //-------
 // USERS
@@ -54,7 +134,7 @@ for (let i = 0; i < weightDivisions.length; i++) {
 // interface NewUserModel {
 //   name: string // Character limit
 //   profile_image?: string | null // Character limit
-//   previous_winner?: boolean // In future, could check against db table of past winners, so that only admins can approve new users who say they're past winners
+//   previous_winner?: boolean //
 // }
 
 // interface UpdateUserModel {
@@ -74,76 +154,83 @@ export function checkNewUser(incoming: UserModels.NewUserModel): Result {
   }
 
   // Type
-  const incomingKeys = Object.keys(incoming)
-  const validKeys = ['name', 'profile_image', 'previous_winner']
+  // all keys and their valid types, as an object
+  const template = {
+    name: 'string',
+    profile_image: ['string', 'null'],
+    previous_winner: 'boolean',
+  }
+
+  // required keys, valid keys, and keys in request
   const requiredKeys = ['name']
-  // contains required keys
-  requiredKeys.forEach((key) => {
-    if (!incomingKeys.includes(key)) {
-      result.errors.push(`request must include a '${key}' key`)
-    }
-  })
-  // returns result immediately if required keys not found
-  if (result.errors[0]) return result
+  const validKeys = Object.keys(template)
+  const requestKeys = Object.keys(incoming)
 
-  // contains only allowed keys
-  incomingKeys.forEach((key) => {
-    if (!validKeys.includes(key)) {
-      result.errors.push(`'${key}' is not a valid key`)
-    }
-  })
+  // Request
+  // has all required, and only valid keys
+  const keyCheck = checkKeys(incoming, requiredKeys, validKeys)
+  if (keyCheck.pass === false) return keyCheck as Result
 
-  // Name property
-  // exists
-  if (!incoming.name) {
-    result.errors.push(`could not find 'name' property`)
-  }
-
-  // is a string
-  if (typeof incoming.name !== 'string') {
-    result.errors.push(
-      `'name' property should be of type 'string', instead recieved '${typeof incoming.name}'`
-    )
-  }
-
-  // conforms to character limit
-  if (incoming.name.length > nameCharLimit) {
-    result.errors.push(
-      `'name' property exceeds character limit of ${nameCharLimit}`
-    )
-  }
-
-  // Profile_image property (optional)
-  // exists
-  if (incoming.profile_image) {
-    // is a string or null
-    if (
-      typeof incoming.profile_image !== 'string' &&
-      typeof incoming.profile_image !== null
-    ) {
-      result.errors.push(
-        `'profile_image' property should be of type 'string' or 'null', instead recieved '${typeof incoming.profile_image}'`
-      )
-    }
-
-    // conforms to character limit
-    if (incoming.profile_image.length > pathCharLimit) {
-      result.errors.push(
-        `'profile_image' property exceeds character limit of ${pathCharLimit}`
-      )
+  // each value has a valid type
+  for (let i = 0; i < requestKeys.length; i++) {
+    const key = requestKeys[i] as keyof UserModels.NewUserModel
+    const { pass, errors } = checkType(key, typeof incoming[key], template[key])
+    if (!pass) {
+      result.errors.push(errors[0])
     }
   }
 
-  // Previous_winner property (optional)
-  // exists
-  if (incoming.previous_winner) {
-    // is a boolean
-    if (typeof incoming.previous_winner !== 'boolean') {
-      result.errors.push(
-        `'previous_winner' property should be of type 'boolean', instead recieved '${typeof incoming.previous_winner}'`
-      )
-    }
-  }
+  // // Name property
+  // // exists
+  // if (!incoming.name) {
+  //   result.errors.push(`could not find 'name' property`)
+  // }
+
+  // // is a string
+  // if (typeof incoming.name !== 'string') {
+  //   result.errors.push(
+  //     `'name' property should be of type 'string', instead recieved '${typeof incoming.name}'`
+  //   )
+  // }
+
+  // // conforms to character limit
+  // if (incoming.name.length > nameCharLimit) {
+  //   result.errors.push(
+  //     `'name' property exceeds character limit of ${nameCharLimit}`
+  //   )
+  // }
+
+  // // Profile_image property (optional)
+  // // exists
+  // if (incoming.profile_image) {
+  //   // is a string or null
+  //   if (
+  //     typeof incoming.profile_image !== 'string' &&
+  //     typeof incoming.profile_image !== null
+  //   ) {
+  //     result.errors.push(
+  //       `'profile_image' property should be of type 'string' or 'null', instead recieved '${typeof incoming.profile_image}'`
+  //     )
+  //   }
+
+  //   // conforms to character limit
+  //   if (incoming.profile_image.length > pathCharLimit) {
+  //     result.errors.push(
+  //       `'profile_image' property exceeds character limit of ${pathCharLimit}`
+  //     )
+  //   }
+  // }
+
+  // // Previous_winner property (optional)
+  // // exists
+  // if (incoming.previous_winner) {
+  //   // is a boolean
+  //   if (typeof incoming.previous_winner !== 'boolean') {
+  //     result.errors.push(
+  //       `'previous_winner' property should be of type 'boolean', instead recieved '${typeof incoming.previous_winner}'`
+  //     )
+  //   }
+  // }
 
   // Pass if no errors
   if (!result.errors[0]) {
