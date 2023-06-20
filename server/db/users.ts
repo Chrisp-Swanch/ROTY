@@ -41,6 +41,6 @@ export function updateUser(
 }
 
 // Users - Delete
-export function deleterUser(id: number): Promise<number> {
+export function deleteUser(id: number): Promise<number> {
   return db('users').delete().where({ id })
 }

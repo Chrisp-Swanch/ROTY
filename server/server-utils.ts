@@ -1,6 +1,6 @@
 import * as UserModels from '../models/users'
 import * as RockModels from '../models/rocks'
-// import * as VoteModels from '../models/users'
+import * as VoteModels from '../models/votes'
 
 //----------------------------------------------------------------
 // FUNCTIONS TO VALIDATE IMCOMING REQUESTS AGAINST EXPECTED TYPES
@@ -17,7 +17,7 @@ export type Result = {
 }
 
 // Error printing
-export function validate(result: Result) {
+export function validate(result: Result): boolean {
   if (result.pass == true) return true
   console.log(
     `\n-----------------------------
@@ -58,6 +58,7 @@ const weightDivisions = [
   'Heavyweight',
   'Super Heavyweight',
 ] // Valid weight divisions
+const votePreferences = ['1', '2', '3']
 
 //-----------------------------------
 // FUNCTIONS TO CHECK KEYS AND TYPES
@@ -380,7 +381,7 @@ export function checkUpdateUser(incoming: UserModels.Update): Result {
 
 // FUNCTIONS
 
-// NewRockModel
+// RockModels.New
 export function checkNewRock(incoming: RockModels.New): Result {
   const result: Result = {
     pass: false,
@@ -466,7 +467,7 @@ export function checkNewRock(incoming: RockModels.New): Result {
   return result
 }
 
-// UpdateRockModel
+// RockModels.Update
 export function checkUpdateRock(incoming: RockModels.Update): Result {
   const result: Result = {
     pass: false,
@@ -540,6 +541,140 @@ export function checkUpdateRock(incoming: RockModels.Update): Result {
       'weight_division',
       incoming.weight_division,
       weightDivisions
+    )
+    if (!pass) {
+      result.errors.push(errors[0])
+    }
+  }
+
+  // Pass if no errors
+  if (!result.errors[0]) {
+    result.pass = true
+    return result
+  }
+
+  return result
+}
+
+//-------
+// VOTES
+//-------
+
+// Models and their characteristics
+
+//  interface VoteModels.New {
+//   user_id: number //
+//   rock_id: number //
+//   preference: number // Valid option
+// }
+
+//  interface VoteModels.Update {
+//   rock_id?: number //
+//   preference?: number // Valid option
+//   is_deleted?: boolean //
+// }
+
+// FUNCTIONS
+
+// VoteModels.New
+export function checkNewVote(incoming: VoteModels.New): Result {
+  const result: Result = {
+    pass: false,
+    errors: [],
+  }
+
+  // Type
+  // valid keys and their types
+  const template = {
+    user_id: 'number',
+    rock_id: 'number',
+    preference: 'number',
+  }
+
+  // required keys, valid keys, keys in request
+  const requiredKeys = Object.keys(template)
+  const validKeys = requiredKeys
+  const requestKeys = Object.keys(incoming)
+
+  // Request
+  // has all required, and only valid keys
+  const keyCheck = checkKeys(incoming, requiredKeys, validKeys)
+  if (keyCheck.pass === false) return keyCheck as Result
+
+  // each value has a valid type
+  for (let i = 0; i < requestKeys.length; i++) {
+    const key = requestKeys[i] as keyof VoteModels.New
+    let val: string = typeof incoming[key]
+    if (incoming[key] === null) val = 'null'
+    const { pass, errors } = checkType(key, val, template[key])
+    if (!pass) {
+      result.errors.push(errors[0])
+    }
+  }
+
+  // keys conform to accepted set of values
+  if (incoming.preference) {
+    const { pass, errors } = checkAcceptedString(
+      'preference',
+      String(incoming.preference),
+      votePreferences
+    )
+    if (!pass) {
+      result.errors.push(errors[0])
+    }
+  }
+
+  // Pass if no errors
+  if (!result.errors[0]) {
+    result.pass = true
+    return result
+  }
+
+  return result
+}
+
+// VoteModels.Update
+export function checkUpdateVote(incoming: VoteModels.Update): Result {
+  const result: Result = {
+    pass: false,
+    errors: [],
+  }
+
+  // Type
+  // valid keys and their types
+  const template = {
+    rock_id: 'number',
+    preference: 'number',
+    is_deleted: 'boolean',
+  }
+
+  // required keys, valid keys, keys in request
+  const requiredKeys = ['none']
+  const validKeys = Object.keys(template)
+  const requestKeys = Object.keys(incoming)
+
+  // Request
+  // has all required, and only valid keys
+  const keyCheck = checkKeys(incoming, requiredKeys, validKeys)
+  if (keyCheck.pass === false) return keyCheck as Result
+
+  // each value has a valid type
+  for (let i = 0; i < requestKeys.length; i++) {
+    const key = requestKeys[i] as keyof VoteModels.Update
+    let val: string = typeof incoming[key]
+    if (incoming[key] === null) val = 'null'
+    const { pass, errors } = checkType(key, val, template[key])
+    if (!pass) {
+      result.errors.push(errors[0])
+    }
+  }
+
+  // keys conform to accepted set of values
+  if (incoming.preference) {
+    const { pass, errors } = checkAcceptedString(
+      'preference',
+      String(incoming.preference),
+      votePreferences
     )
     if (!pass) {
       result.errors.push(errors[0])

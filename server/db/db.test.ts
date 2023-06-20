@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest'
 import connection from './connection'
 import * as users from './users'
 import * as rocks from './rocks'
+import * as votes from './votes'
 
 //-------
 // SETUP
@@ -126,7 +127,7 @@ describe('Users Db functions', () => {
   it('Deletes a user', async () => {
     expect.assertions(1)
 
-    users.deleterUser(2)
+    users.deleteUser(2)
     const result = await users.getAllUsers()
     expect(result).toHaveLength(5)
   })
@@ -237,5 +238,96 @@ describe('Rocks Db functions', () => {
     rocks.deleteRock(2)
     const result = await rocks.getAllRocks()
     expect(result).toHaveLength(9)
+  })
+})
+
+//-------
+// Votes
+//-------
+
+describe('Votes Db functions', () => {
+  // GET all votes
+  it('Retrieves all votes as array', async () => {
+    expect.assertions(2)
+    const result = await votes.getAllVotes()
+
+    expect(result).toHaveLength(12)
+    expect(result[6]).toStrictEqual({
+      id: 7,
+      created_at: 1687147209343,
+      user_id: 3,
+      rock_id: 9,
+      preference: 1,
+      is_deleted: 0,
+    })
+  })
+
+  // GET votes by user_id
+  it('Retrieves votes made by given user', async () => {
+    expect.assertions(2)
+    const result = await votes.getVotesByUser(2)
+
+    expect(result).toHaveLength(3)
+    expect(result[1]).toStrictEqual({
+      id: 5,
+      created_at: 1687147209343,
+      user_id: 2,
+      rock_id: 5,
+      preference: 2,
+      is_deleted: 0,
+    })
+  })
+
+  // POST new vote
+  it('Adds a vote and returns new vote in array', async () => {
+    expect.assertions(3)
+
+    const newVote = {
+      user_id: 5,
+      rock_id: 6,
+      preference: 2,
+    }
+
+    const result = await votes.addVote(newVote)
+    expect(result).toHaveLength(1)
+    expect(result[0]).toStrictEqual({
+      id: 13,
+      created_at: result[0].created_at,
+      user_id: 5,
+      rock_id: 6,
+      preference: 2,
+      is_deleted: 0,
+    })
+
+    const newVotes = await votes.getAllVotes()
+    expect(newVotes).toHaveLength(13)
+  })
+
+  it('Updates a vote and returns updated vote in array', async () => {
+    expect.assertions(1)
+
+    const updateData = {
+      rock_id: 3,
+      preference: 1,
+      is_deleted: true,
+    }
+
+    const result = await votes.updateVote(updateData, 11)
+    expect(result[0]).toStrictEqual({
+      id: 11,
+      created_at: 1687147209343,
+      user_id: 4,
+      rock_id: 3,
+      preference: 1,
+      is_deleted: 1,
+    })
+  })
+
+  it('Deletes a vote', async () => {
+    expect.assertions(1)
+
+    votes.deleteVote(5)
+    const result = await votes.getAllVotes()
+    expect(result).toHaveLength(12)
   })
 })

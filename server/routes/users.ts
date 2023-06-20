@@ -92,7 +92,7 @@ router.delete('/:id', async (req, res) => {
   const id = Number(req.params.id)
 
   // call the database
-  await db.deleterUser(id)
+  await db.deleteUser(id)
   try {
     res.sendStatus(204)
   } catch (err) {
