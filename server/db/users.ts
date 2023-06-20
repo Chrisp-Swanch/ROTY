@@ -6,8 +6,10 @@ const db = connection
 // USERS
 
 // Users - Create
-export function addUser(userData: UserModels.New): Promise<UserModels.UserSnakeCase[]> {
-  return db('users').insert(userData).returning('*')
+export function addUser(
+  userData: UserModels.New
+): Promise<UserModels.UserSnakeCase[]> {
+  return db('users').insert(userData).returning(['*'])
 }
 
 // Users - Read

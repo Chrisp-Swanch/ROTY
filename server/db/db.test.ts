@@ -24,7 +24,12 @@ afterAll(async () => {
 // TEST FUNCTIONS
 //----------------
 
+//---------
+// General
+//---------
+
 describe('Test environment working', () => {
+  // Test environment
   it('Can be sent things', () => {
     expect.assertions(4)
     expect(true).toBeTruthy()
@@ -34,9 +39,13 @@ describe('Test environment working', () => {
   })
 })
 
+//-------
+// Users
+//-------
+
 describe('Users Db functions', () => {
   // GET all users
-  it('Retrieves all users in array', async () => {
+  it('Retrieves all users as array', async () => {
     expect.assertions(2)
     const result = await users.getAllUsers()
 
@@ -68,8 +77,9 @@ describe('Users Db functions', () => {
     })
   })
 
+  // POST new user
   it('Adds a user and returns new user in array', async () => {
-    expect.assertions(2)
+    expect.assertions(3)
 
     const newUser = {
       name: 'Squidward Tentacles',
@@ -87,5 +97,145 @@ describe('Users Db functions', () => {
       previous_winner: 1,
       is_deleted: 0,
     })
+
+    const newUsers = await users.getAllUsers()
+    expect(newUsers).toHaveLength(6)
+  })
+
+  it('Updates a user and returns updated user in array', async () => {
+    expect.assertions(1)
+
+    const updateData = {
+      name: 'New Name',
+      profile_image: 'new image path',
+      previous_winner: true,
+      is_deleted: true,
+    }
+
+    const result = await users.updateUser(updateData, 3)
+    expect(result[0]).toStrictEqual({
+      id: 3,
+      created_at: 1687147209343,
+      name: 'New Name',
+      profile_image: 'new image path',
+      previous_winner: 1,
+      is_deleted: 1,
+    })
+  })
+
+  it('Deletes a user', async () => {
+    expect.assertions(1)
+
+    users.deleterUser(2)
+    const result = await users.getAllUsers()
+    expect(result).toHaveLength(5)
+  })
+})
+
+//-------
+// Rocks
+//-------
+
+describe('Rocks Db functions', () => {
+  // GET all rocks
+  it('Retrieves all rocks as array', async () => {
+    expect.assertions(2)
+    const result = await rocks.getAllRocks()
+
+    expect(result).toHaveLength(9)
+    expect(result[0]).toStrictEqual({
+      id: 1,
+      created_at: 1687147209343,
+      owner_id: 1,
+      name: 'Rock of Ages',
+      description: 'A beautiful collection of sand-coloured stones',
+      image:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTktckLlDpbYJWcj60hZcubQVuxVjAMNfOJXNK0_Ewv_vU0O6S2ENGzeDAho2NHMvxIyp0&usqp=CAU',
+      weight_division: 'Middleweight',
+      disqualified: 0,
+      is_deleted: 0,
+    })
+  })
+
+  // GET one rock by id
+  it('Retrieves one rock (as single object) when given id param', async () => {
+    expect.assertions(1)
+    const result = await rocks.getOneRock(2)
+
+    expect(result).toStrictEqual({
+      id: 2,
+      created_at: 1687147209343,
+      owner_id: 1,
+      name: 'Rocky III',
+      description: 'Wild-foraged greywacke with strong eye-contact',
+      image:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDtOVmKAMSRivthNb5sO8Y6ITVtGmMQhFlUA&usqp=CAU',
+      weight_division: 'Lightweight',
+      disqualified: 0,
+      is_deleted: 0,
+    })
+  })
+
+  // POST new user
+  it('Adds a rock and returns new rock in array', async () => {
+    expect.assertions(3)
+
+    const newRock = {
+      owner_id: 1,
+      name: 'Rocky McRockface',
+      weight_division: 'Heavyweight',
+      description: null,
+    }
+
+    const result = await rocks.addRock(newRock)
+    expect(result).toHaveLength(1)
+    expect(result[0]).toStrictEqual({
+      id: 10,
+      created_at: result[0].created_at,
+      owner_id: 1,
+      name: 'Rocky McRockface',
+      description: null,
+      image: null,
+      weight_division: 'Heavyweight',
+      disqualified: 0,
+      is_deleted: 0,
+    })
+
+    const newRocks = await rocks.getAllRocks()
+    expect(newRocks).toHaveLength(10)
+  })
+
+  it('Updates a rock and returns updated rock in array', async () => {
+    expect.assertions(1)
+
+    const updateData = {
+      name: 'New Rock Name',
+      description: 'Newest rock in town',
+      image: 'some image path',
+      weight_division: 'Lightweight',
+      disqualified: true,
+      is_deleted: true,
+    }
+
+    const result = await rocks.updateRock(updateData, 4)
+    expect(result[0]).toStrictEqual({
+      id: 4,
+      created_at: 1687147209343,
+      owner_id: 3,
+      name: 'New Rock Name',
+      description: 'Newest rock in town',
+      image: 'some image path',
+      weight_division: 'Lightweight',
+      disqualified: 1,
+      is_deleted: 1,
+    })
+  })
+
+  it('Deletes a rock', async () => {
+    expect.assertions(1)
+
+    rocks.deleteRock(2)
+    const result = await rocks.getAllRocks()
+    expect(result).toHaveLength(9)
   })
 })
