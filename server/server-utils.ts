@@ -83,6 +83,7 @@ export function checkKeys(
       }
     })
   }
+
   // contains only valid keys
   requestKeys.forEach((key) => {
     if (!valid.includes(key)) {
@@ -244,7 +245,9 @@ export function checkNewUser(incoming: UserModels.New): Result {
   // each value has a valid type
   for (let i = 0; i < requestKeys.length; i++) {
     const key = requestKeys[i] as keyof UserModels.New
-    const { pass, errors } = checkType(key, typeof incoming[key], template[key])
+    let val: string = typeof incoming[key]
+    if (incoming[key] === null) val = 'null'
+    const { pass, errors } = checkType(key, val, template[key])
     if (!pass) {
       result.errors.push(errors[0])
     }
@@ -319,7 +322,9 @@ export function checkUpdateUser(incoming: UserModels.Update): Result {
   // each value has a valid type
   for (let i = 0; i < requestKeys.length; i++) {
     const key = requestKeys[i] as keyof UserModels.Update
-    const { pass, errors } = checkType(key, typeof incoming[key], template[key])
+    let val: string = typeof incoming[key]
+    if (incoming[key] === null) val = 'null'
+    const { pass, errors } = checkType(key, val, template[key])
     if (!pass) {
       result.errors.push(errors[0])
     }
@@ -418,7 +423,9 @@ export function checkNewRock(incoming: RockModels.New): Result {
   // each value has a valid type
   for (let i = 0; i < requestKeys.length; i++) {
     const key = requestKeys[i] as keyof RockModels.New
-    const { pass, errors } = checkType(key, typeof incoming[key], template[key])
+    let val: string = typeof incoming[key]
+    if (incoming[key] === null) val = 'null'
+    const { pass, errors } = checkType(key, val, template[key])
     if (!pass) {
       result.errors.push(errors[0])
     }
@@ -459,11 +466,6 @@ export function checkNewRock(incoming: RockModels.New): Result {
   return result
 }
 
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-
 // UpdateRockModel
 export function checkUpdateRock(incoming: RockModels.Update): Result {
   const result: Result = {
@@ -471,96 +473,76 @@ export function checkUpdateRock(incoming: RockModels.Update): Result {
     errors: [],
   }
 
-  // Name property (optional)
-  // exists
-  if (incoming.name) {
-    // is a string
-    if (typeof incoming.name !== 'string') {
-      result.errors.push(
-        `'name' property should be of type 'string', instead recieved '${typeof incoming.name}'`
-      )
-    }
+  // Type
+  // valid keys and their types
+  const template = {
+    name: 'string',
+    description: ['string', 'null'],
+    image: ['string', 'null'],
+    weight_division: 'string',
+    disqualified: 'boolean',
+    is_deleted: 'boolean',
+  }
 
-    // conforms to character limit
-    if (incoming.name.length > nameCharLimit) {
-      result.errors.push(
-        `'name' property exceeds character limit of ${nameCharLimit}`
-      )
+  // keys with character limits
+  type Limits = {
+    name: number
+    description: number
+    image: number
+  }
+  const limits: Limits = {
+    name: nameCharLimit,
+    description: descriptionCharLimit,
+    image: pathCharLimit,
+  }
+
+  // required keys, valid keys, keys in request, keys with character limits
+  const requiredKeys = ['none']
+  const validKeys = Object.keys(template)
+  const requestKeys = Object.keys(incoming)
+  const limitKeys = Object.keys(limits)
+
+  // Request
+  // has all required, and only valid keys
+  const keyCheck = checkKeys(incoming, requiredKeys, validKeys)
+  if (keyCheck.pass === false) return keyCheck as Result
+
+  // each value has a valid type
+  for (let i = 0; i < requestKeys.length; i++) {
+    const key = requestKeys[i] as keyof RockModels.Update
+    let val: string = typeof incoming[key]
+    if (incoming[key] === null) val = 'null'
+    const { pass, errors } = checkType(key, val, template[key])
+    if (!pass) {
+      result.errors.push(errors[0])
     }
   }
 
-  // Description property (optional)
-  // exists
-  if (incoming.description) {
-    // is a string
-    if (typeof incoming.description !== 'string') {
-      result.errors.push(
-        `'description' property should be of type 'string', instead recieved '${typeof incoming.description}'`
+  // keys conform to character limits
+  for (let i = 0; i < limitKeys.length; i++) {
+    const key = limitKeys[i] as keyof Limits
+    const val = key as keyof RockModels.Update
+    if (incoming[val]) {
+      const { pass, errors } = checkCharLimit(
+        key,
+        incoming[val] as string,
+        limits[key]
       )
-    }
-
-    // conforms to character limit
-    if (incoming.description.length > descriptionCharLimit) {
-      result.errors.push(
-        `'description' property exceeds character limit of ${nameCharLimit}`
-      )
+      if (!pass) {
+        result.errors.push(errors[0])
+      }
     }
   }
 
-  // Image property (optional)
-  // exists
-  if (incoming.image) {
-    // is a string or null
-    if (typeof incoming.image !== 'string' && typeof incoming.image !== null) {
-      result.errors.push(
-        `'image' property should be of type 'string' or 'null', instead recieved '${typeof incoming.image}'`
-      )
-    }
-
-    // conforms to character limit
-    if (incoming.image.length > pathCharLimit) {
-      result.errors.push(
-        `'image' property exceeds character limit of ${pathCharLimit}`
-      )
-    }
-  }
-
-  // Weight_division property (optional)
-  // exists
+  // keys conform to accepted set of values
   if (incoming.weight_division) {
-    // is a string
-    if (typeof incoming.weight_division !== 'string') {
-      result.errors.push(
-        `'weight_division' property should be of type 'string', instead recieved '${typeof incoming.image}'`
-      )
-    }
-
-    // if (!weightDivisions.includes(incoming.weight_division)) {
-    //   result.errors.push(
-    //     `'weight_division' property is not valid. Valid options are; ${validDivs} (case sensitive)`
-    //   )
-    // }
-  }
-
-  // Disqualified property (optional)
-  // exists
-  if (incoming.disqualified) {
-    // is a boolean
-    if (typeof incoming.disqualified !== 'boolean') {
-      result.errors.push(
-        `'disqualified' property should be of type 'boolean', instead recieved '${typeof incoming.disqualified}'`
-      )
-    }
-  }
-
-  // Is_deleted property (optional)
-  // exists
-  if (incoming.is_deleted) {
-    // is a boolean
-    if (typeof incoming.is_deleted !== 'boolean') {
-      result.errors.push(
-        `'is_deleted' property should be of type 'boolean', instead recieved '${typeof incoming.is_deleted}'`
-      )
+    const { pass, errors } = checkAcceptedString(
+      'weight_division',
+      incoming.weight_division,
+      weightDivisions
+    )
+    if (!pass) {
+      result.errors.push(errors[0])
     }
   }
 
