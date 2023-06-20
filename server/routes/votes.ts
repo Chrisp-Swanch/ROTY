@@ -1,6 +1,7 @@
 import express from 'express'
-import * as VoteModels from '../../models/votes'
-import { checkNewVote, checkUpdateVote, validate } from '../server-utils'
+import * as VoteModels from '../../models/interfaces/votes'
+import { validate } from '../../models/utils/helpers'
+import { checkNewVote, checkUpdateVote } from '../../models/utils/votes'
 
 const router = express.Router()
 

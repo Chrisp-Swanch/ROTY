@@ -1,5 +1,5 @@
 import connection from './connection'
-import * as RockModels from '../../models/rocks'
+import * as RockModels from '../../models/interfaces/rocks'
 
 const db = connection
 

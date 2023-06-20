@@ -1,6 +1,6 @@
 export interface RockSnakeCase {
   id: number
-  created_at: string
+  created_at: number
   owner_id: number
   name: string
   description: string

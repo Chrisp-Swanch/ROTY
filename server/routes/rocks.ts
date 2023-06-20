@@ -1,6 +1,7 @@
 import express from 'express'
-import * as RockModels from '../../models/rocks'
-import { checkNewRock, checkUpdateRock, validate } from '../server-utils'
+import * as RockModels from '../../models/interfaces/rocks'
+import { validate } from '../../models/utils/helpers'
+import { checkNewRock, checkUpdateRock } from '../../models/utils/rocks'
 
 const router = express.Router()
 

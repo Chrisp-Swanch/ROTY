@@ -1,5 +1,5 @@
 import connection from './connection'
-import * as UserModels from '../../models/users'
+import * as UserModels from '../../models/interfaces/users'
 
 const db = connection
 

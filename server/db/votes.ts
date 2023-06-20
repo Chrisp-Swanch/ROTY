@@ -1,5 +1,5 @@
 import connection from './connection'
-import * as VoteModels from '../../models/votes'
+import * as VoteModels from '../../models/interfaces/votes'
 
 const db = connection
 

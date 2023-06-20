@@ -1,6 +1,6 @@
 export interface VoteSnakeCase {
   id: number
-  created_at: string
+  created_at: number
   user_id: number
   rock_id: number
   preference: number

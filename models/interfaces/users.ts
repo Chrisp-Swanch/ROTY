@@ -1,6 +1,6 @@
 export interface UserSnakeCase {
   id: number
-  created_at: string
+  created_at: number
   name: string
   profile_image: string
   previous_winner: boolean

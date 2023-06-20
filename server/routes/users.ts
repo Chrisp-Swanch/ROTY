@@ -1,6 +1,7 @@
 import express from 'express'
-import * as UserModels from '../../models/users'
-import { checkNewUser, checkUpdateUser, validate } from '../server-utils'
+import * as UserModels from '../../models/interfaces/users'
+import { validate } from '../../models/utils/helpers'
+import { checkNewUser, checkUpdateUser } from '../../models/utils/users'
 
 const router = express.Router()
 
