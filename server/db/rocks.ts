@@ -1,16 +1,14 @@
 import connection from './connection'
-import type {
-  RockModel,
-  NewRockModel,
-  UpdateRockModel,
-} from '../../models/rocks'
+import * as RockModels from '../../models/rocks'
 
 const db = connection
 
 // ROCKS
 
 // Rocks - Create
-export function addRock(rockData: NewRockModel): Promise<RockModel[]> {
+export function addRock(
+  rockData: RockModels.New
+): Promise<RockModels.RockSnakeCase[]> {
   return db('rocks')
     .insert({
       ...rockData,
@@ -20,19 +18,19 @@ export function addRock(rockData: NewRockModel): Promise<RockModel[]> {
 }
 
 // Rocks - Read
-export function getAllRocks(): Promise<RockModel[]> {
+export function getAllRocks(): Promise<RockModels.RockSnakeCase[]> {
   return db('rocks').select('*')
 }
 
-export function getOneRock(id: number): Promise<RockModel> {
+export function getOneRock(id: number): Promise<RockModels.RockSnakeCase> {
   return db('rocks').select('*').where({ id }).first()
 }
 
 // Rocks - Update
 export function updateRock(
-  updateData: UpdateRockModel,
+  updateData: RockModels.Update,
   id: number
-): Promise<RockModel[]> {
+): Promise<RockModels.RockSnakeCase[]> {
   const {
     name,
     description,

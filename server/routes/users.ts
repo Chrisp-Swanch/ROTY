@@ -1,5 +1,5 @@
 import express from 'express'
-import { NewUserModel, UpdateUserModel } from '../../models/users'
+import * as UserModels from '../../models/users'
 import { checkNewUser, checkUpdateUser, validate } from '../server-utils'
 
 const router = express.Router()
@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
 // POST
 // Add a new user
 router.post('/', async (req, res) => {
-  const newUser = req.body as NewUserModel
+  const newUser = req.body as UserModels.New
 
   if (!validate(checkNewUser(newUser))) {
     res.sendStatus(400)
@@ -54,7 +54,7 @@ router.post('/', async (req, res) => {
 // Update user
 router.patch('/:id', async (req, res) => {
   const id = Number(req.params.id)
-  let newUser = req.body as UpdateUserModel
+  let newUser = req.body as UserModels.Update
 
   if (!validate(checkUpdateUser(newUser))) {
     res.sendStatus(400)

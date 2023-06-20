@@ -6,6 +6,10 @@ import * as RockModels from '../models/rocks'
 // FUNCTIONS TO VALIDATE IMCOMING REQUESTS AGAINST EXPECTED TYPES
 //----------------------------------------------------------------
 
+//-------
+// SETUP
+//-------
+
 // Type for results, containing pass/fail bool and relevant errors
 export type Result = {
   pass: boolean
@@ -56,7 +60,11 @@ const weightDivisions = [
 ] // Valid weight divisions
 const validDivs = arrayToString(weightDivisions, 'and')
 
-// Generic key-checking function
+//-----------------------------------
+// FUNCTIONS TO CHECK KEYS AND TYPES
+//-----------------------------------
+
+// Check that correct keys are present
 export function checkKeys(
   request: object,
   required: string[],
@@ -66,14 +74,16 @@ export function checkKeys(
     pass: false,
     errors: [],
   }
-
   const requestKeys = Object.keys(request)
+
   // contains required keys
-  required.forEach((key) => {
-    if (!requestKeys.includes(key)) {
-      result.errors.push(`request must include a '${key}' key`)
-    }
-  })
+  if (required[0] !== 'none') {
+    required.forEach((key) => {
+      if (!requestKeys.includes(key)) {
+        result.errors.push(`request must include a '${key}' key`)
+      }
+    })
+  }
   // contains only valid keys
   requestKeys.forEach((key) => {
     if (!valid.includes(key)) {
@@ -89,7 +99,7 @@ export function checkKeys(
   return result
 }
 
-// Individual type checking functions
+// Check that keys have correct types
 export function checkType(
   key: string,
   val: string,
@@ -125,46 +135,79 @@ export function checkType(
   return result
 }
 
+// Check that strings conform to character limits
+function checkCharLimit(key: string, value: string, limit: number): Result {
+  const result: Result = {
+    pass: false,
+    errors: [],
+  }
+  if (value.length > limit) {
+    result.errors.push(`'${key}' property exceeds character limit of ${limit}`)
+  }
+
+  // Pass if no errors
+  if (!result.errors[0]) {
+    result.pass = true
+    return result
+  }
+  return result
+}
+
+//-------------------------------
+// FUNCTIONS FOR CHECKING MODELS
+//-------------------------------
+
 //-------
 // USERS
 //-------
 
-// Models and their characteristics, relevant only to server-side
+// Models and their characteristics
 
-// interface NewUserModel {
+// interface UserModels.New {
 //   name: string // Character limit
 //   profile_image?: string | null // Character limit
 //   previous_winner?: boolean //
 // }
 
-// interface UpdateUserModel {
+// interface UserModels.Update {
 //   name?: string // Character limit
-//   profile_image?: string | null // Size limit
+//   profile_image?: string | null // Character limit
 //   previous_winner?: boolean //
 //   is_deleted?: boolean //
 // }
 
-// FUNCTIONS
+// MODEL CHECKING FUNCTIONS
 
-// NewUserModel
-export function checkNewUser(incoming: UserModels.NewUserModel): Result {
+// UserModels.New
+export function checkNewUser(incoming: UserModels.New): Result {
   const result: Result = {
     pass: false,
     errors: [],
   }
 
   // Type
-  // all keys and their valid types, as an object
+  // valid keys and their types
   const template = {
     name: 'string',
     profile_image: ['string', 'null'],
     previous_winner: 'boolean',
   }
 
-  // required keys, valid keys, and keys in request
+  // keys with character limits
+  type Limits = {
+    name: number
+    profile_image: number
+  }
+  const limits: Limits = {
+    name: nameCharLimit,
+    profile_image: pathCharLimit,
+  }
+
+  // required keys, valid keys, keys in request, keys with character limits
   const requiredKeys = ['name']
   const validKeys = Object.keys(template)
   const requestKeys = Object.keys(incoming)
+  const limitKeys = Object.keys(limits)
 
   // Request
   // has all required, and only valid keys
@@ -173,139 +216,101 @@ export function checkNewUser(incoming: UserModels.NewUserModel): Result {
 
   // each value has a valid type
   for (let i = 0; i < requestKeys.length; i++) {
-    const key = requestKeys[i] as keyof UserModels.NewUserModel
+    const key = requestKeys[i] as keyof UserModels.New
     const { pass, errors } = checkType(key, typeof incoming[key], template[key])
     if (!pass) {
       result.errors.push(errors[0])
     }
   }
 
-  // // Name property
-  // // exists
-  // if (!incoming.name) {
-  //   result.errors.push(`could not find 'name' property`)
-  // }
-
-  // // is a string
-  // if (typeof incoming.name !== 'string') {
-  //   result.errors.push(
-  //     `'name' property should be of type 'string', instead recieved '${typeof incoming.name}'`
-  //   )
-  // }
-
-  // // conforms to character limit
-  // if (incoming.name.length > nameCharLimit) {
-  //   result.errors.push(
-  //     `'name' property exceeds character limit of ${nameCharLimit}`
-  //   )
-  // }
-
-  // // Profile_image property (optional)
-  // // exists
-  // if (incoming.profile_image) {
-  //   // is a string or null
-  //   if (
-  //     typeof incoming.profile_image !== 'string' &&
-  //     typeof incoming.profile_image !== null
-  //   ) {
-  //     result.errors.push(
-  //       `'profile_image' property should be of type 'string' or 'null', instead recieved '${typeof incoming.profile_image}'`
-  //     )
-  //   }
-
-  //   // conforms to character limit
-  //   if (incoming.profile_image.length > pathCharLimit) {
-  //     result.errors.push(
-  //       `'profile_image' property exceeds character limit of ${pathCharLimit}`
-  //     )
-  //   }
-  // }
-
-  // // Previous_winner property (optional)
-  // // exists
-  // if (incoming.previous_winner) {
-  //   // is a boolean
-  //   if (typeof incoming.previous_winner !== 'boolean') {
-  //     result.errors.push(
-  //       `'previous_winner' property should be of type 'boolean', instead recieved '${typeof incoming.previous_winner}'`
-  //     )
-  //   }
-  // }
+  // keys conform to character limits
+  for (let i = 0; i < limitKeys.length; i++) {
+    const key = limitKeys[i] as keyof Limits
+    const val = key as keyof UserModels.New
+    if (incoming[val]) {
+      const { pass, errors } = checkCharLimit(
+        key,
+        incoming[val] as string,
+        limits[key]
+      )
+      if (!pass) {
+        result.errors.push(errors[0])
+      }
+    }
+  }
 
   // Pass if no errors
   if (!result.errors[0]) {
     result.pass = true
     return result
   }
-
   return result
 }
 
-// UpdateUserModel
-export function checkUpdateUser(incoming: UserModels.UpdateUserModel): Result {
+// UserModels.Update
+export function checkUpdateUser(incoming: UserModels.Update): Result {
   const result: Result = {
     pass: false,
     errors: [],
   }
 
-  // Name property (optional)
-  // exists
-  if (incoming.name) {
-    // is a string
-    if (typeof incoming.name !== 'string') {
-      result.errors.push(
-        `'name' property should be of type 'string', instead recieved '${typeof incoming.name}'`
-      )
-    }
+  if (!incoming) {
+    result.errors.push(`no body given in request`)
+    return result
+  }
 
-    // conforms to character limit
-    if (incoming.name.length > nameCharLimit) {
-      result.errors.push(
-        `'name' property exceeds character limit of ${nameCharLimit}`
-      )
+  // Type
+  // valid keys and their types
+  const template = {
+    name: 'string',
+    profile_image: ['string', 'null'],
+    previous_winner: 'boolean',
+    is_deleted: 'boolean',
+  }
+
+  // keys with character limits
+  type Limits = {
+    name: number
+    profile_image: number
+  }
+  const limits: Limits = {
+    name: nameCharLimit,
+    profile_image: pathCharLimit,
+  }
+
+  // required keys, valid keys, keys in request, keys with character limits
+  const requiredKeys = ['none']
+  const validKeys = Object.keys(template)
+  const requestKeys = Object.keys(incoming)
+  const limitKeys = Object.keys(limits)
+
+  // Request
+  // has all required, and only valid keys
+  const keyCheck = checkKeys(incoming, requiredKeys, validKeys)
+  if (keyCheck.pass === false) return keyCheck as Result
+
+  // each value has a valid type
+  for (let i = 0; i < requestKeys.length; i++) {
+    const key = requestKeys[i] as keyof UserModels.Update
+    const { pass, errors } = checkType(key, typeof incoming[key], template[key])
+    if (!pass) {
+      result.errors.push(errors[0])
     }
   }
 
-  // Profile_image property (optional)
-  // exists
-  if (incoming.profile_image) {
-    // is a string or null
-    if (
-      typeof incoming.profile_image !== 'string' &&
-      typeof incoming.profile_image !== null
-    ) {
-      result.errors.push(
-        `'profile_image' property should be of type 'string' or 'null', instead recieved '${typeof incoming.profile_image}'`
+  // keys conform to character limits
+  for (let i = 0; i < limitKeys.length; i++) {
+    const key = limitKeys[i] as keyof Limits
+    const val = key as keyof UserModels.Update
+    if (incoming[val]) {
+      const { pass, errors } = checkCharLimit(
+        key,
+        incoming[val] as string,
+        limits[key]
       )
-    }
-
-    // conforms to character limit
-    if (incoming.profile_image.length > pathCharLimit) {
-      result.errors.push(
-        `'profile_image' property exceeds character limit of ${pathCharLimit}`
-      )
-    }
-  }
-
-  // Previous_winner property (optional)
-  // exists
-  if (incoming.previous_winner) {
-    // is a boolean
-    if (typeof incoming.previous_winner !== 'boolean') {
-      result.errors.push(
-        `'previous_winner' property should be of type 'boolean', instead recieved '${typeof incoming.previous_winner}'`
-      )
-    }
-  }
-
-  // Is_deleted property (optional)
-  // exists
-  if (incoming.is_deleted) {
-    // is a boolean
-    if (typeof incoming.is_deleted !== 'boolean') {
-      result.errors.push(
-        `'is_deleted' property should be of type 'boolean', instead recieved '${typeof incoming.is_deleted}'`
-      )
+      if (!pass) {
+        result.errors.push(errors[0])
+      }
     }
   }
 
@@ -322,9 +327,9 @@ export function checkUpdateUser(incoming: UserModels.UpdateUserModel): Result {
 // ROCKS
 //-------
 
-// Models and their characteristics, relevant only to server-side
+// Models and their characteristics
 
-// interface NewRockModel {
+// interface RockModels.New {
 //   owner_id: number // Is number
 //   name: string // Character limit
 //   description: string // Character limit
@@ -332,7 +337,7 @@ export function checkUpdateUser(incoming: UserModels.UpdateUserModel): Result {
 //   weight_division: string // Valid option
 // }
 
-// interface UpdateRockModel {
+// interface RockModels.Update {
 //   name?: string // Character limit
 //   description?: string // Character limit
 //   image?: string // Character limit
@@ -344,96 +349,16 @@ export function checkUpdateUser(incoming: UserModels.UpdateUserModel): Result {
 // FUNCTIONS
 
 // NewRockModel
-export function checkNewRock(incoming: RockModels.NewRockModel): Result {
+export function checkNewRock(incoming: RockModels.New): Result {
   const result: Result = {
     pass: false,
     errors: [],
   }
 
-  // Owner_id property
-  // exists
-  if (!incoming.name) {
-    result.errors.push(`could not find 'owner_id' property`)
-  }
 
-  // is a number
-  if (typeof incoming.owner_id !== 'number') {
-    result.errors.push(
-      `'owner_id' property should be of type 'number', instead recieved '${typeof incoming.owner_id}'`
-    )
-  }
-
-  // Name property
-  // exists
-  if (!incoming.name) {
-    result.errors.push(`could not find 'name' property`)
-  }
-
-  // is a string
-  if (typeof incoming.name !== 'string') {
-    result.errors.push(
-      `'name' property should be of type 'string', instead recieved '${typeof incoming.name}'`
-    )
-  }
-
-  // conforms to character limit
-  if (incoming.name.length > nameCharLimit) {
-    result.errors.push(
-      `'name' property exceeds character limit of ${nameCharLimit}`
-    )
-  }
-
-  // Description property
-  // exists
-  if (!incoming.description) {
-    result.errors.push(`could not find 'description' property`)
-  }
-
-  // is a string
-  if (typeof incoming.description !== 'string') {
-    result.errors.push(
-      `'description' property should be of type 'string', instead recieved '${typeof incoming.description}'`
-    )
-  }
-
-  // conforms to character limit
-  if (incoming.description.length > descriptionCharLimit) {
-    result.errors.push(
-      `'description' property exceeds character limit of ${nameCharLimit}`
-    )
-  }
-
-  // Image property
-  // exists
-  if (incoming.image) {
-    // is a string or null
-    if (typeof incoming.image !== 'string' && typeof incoming.image !== null) {
-      result.errors.push(
-        `'image' property should be of type 'string' or 'null', instead recieved '${typeof incoming.image}'`
-      )
-    }
-
-    // conforms to character limit
-    if (incoming.image.length > pathCharLimit) {
-      result.errors.push(
-        `'image' property exceeds character limit of ${pathCharLimit}`
-      )
-    }
-  }
+  
 
   // Weight_division property
-  // exists
-  if (!incoming.weight_division) {
-    result.errors.push(`could not find 'weight_division' property`)
-  }
-
-  // is a string
-  if (typeof incoming.weight_division !== 'string') {
-    result.errors.push(
-      `'weight_division' property should be of type 'string', instead recieved '${typeof incoming.image}'`
-    )
-  }
-
   if (!weightDivisions.includes(incoming.weight_division)) {
     result.errors.push(
       `'weight_division' property is not valid. Valid options are; ${validDivs} (case sensitive)`
@@ -449,111 +374,116 @@ export function checkNewRock(incoming: RockModels.NewRockModel): Result {
   return result
 }
 
-// UpdateRockModel
-export function checkUpdateRock(incoming: RockModels.UpdateRockModel): Result {
-  const result: Result = {
-    pass: false,
-    errors: [],
-  }
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+/////////////////////////////////////////////
 
-  // Name property (optional)
-  // exists
-  if (incoming.name) {
-    // is a string
-    if (typeof incoming.name !== 'string') {
-      result.errors.push(
-        `'name' property should be of type 'string', instead recieved '${typeof incoming.name}'`
-      )
-    }
+// // UpdateRockModel
+// export function checkUpdateRock(incoming: RockModels.Update): Result {
+//   const result: Result = {
+//     pass: false,
+//     errors: [],
+//   }
 
-    // conforms to character limit
-    if (incoming.name.length > nameCharLimit) {
-      result.errors.push(
-        `'name' property exceeds character limit of ${nameCharLimit}`
-      )
-    }
-  }
+//   // Name property (optional)
+//   // exists
+//   if (incoming.name) {
+//     // is a string
+//     if (typeof incoming.name !== 'string') {
+//       result.errors.push(
+//         `'name' property should be of type 'string', instead recieved '${typeof incoming.name}'`
+//       )
+//     }
 
-  // Description property (optional)
-  // exists
-  if (incoming.description) {
-    // is a string
-    if (typeof incoming.description !== 'string') {
-      result.errors.push(
-        `'description' property should be of type 'string', instead recieved '${typeof incoming.description}'`
-      )
-    }
+//     // conforms to character limit
+//     if (incoming.name.length > nameCharLimit) {
+//       result.errors.push(
+//         `'name' property exceeds character limit of ${nameCharLimit}`
+//       )
+//     }
+//   }
 
-    // conforms to character limit
-    if (incoming.description.length > descriptionCharLimit) {
-      result.errors.push(
-        `'description' property exceeds character limit of ${nameCharLimit}`
-      )
-    }
-  }
+//   // Description property (optional)
+//   // exists
+//   if (incoming.description) {
+//     // is a string
+//     if (typeof incoming.description !== 'string') {
+//       result.errors.push(
+//         `'description' property should be of type 'string', instead recieved '${typeof incoming.description}'`
+//       )
+//     }
 
-  // Image property (optional)
-  // exists
-  if (incoming.image) {
-    // is a string or null
-    if (typeof incoming.image !== 'string' && typeof incoming.image !== null) {
-      result.errors.push(
-        `'image' property should be of type 'string' or 'null', instead recieved '${typeof incoming.image}'`
-      )
-    }
+//     // conforms to character limit
+//     if (incoming.description.length > descriptionCharLimit) {
+//       result.errors.push(
+//         `'description' property exceeds character limit of ${nameCharLimit}`
+//       )
+//     }
+//   }
 
-    // conforms to character limit
-    if (incoming.image.length > pathCharLimit) {
-      result.errors.push(
-        `'image' property exceeds character limit of ${pathCharLimit}`
-      )
-    }
-  }
+//   // Image property (optional)
+//   // exists
+//   if (incoming.image) {
+//     // is a string or null
+//     if (typeof incoming.image !== 'string' && typeof incoming.image !== null) {
+//       result.errors.push(
+//         `'image' property should be of type 'string' or 'null', instead recieved '${typeof incoming.image}'`
+//       )
+//     }
 
-  // Weight_division property (optional)
-  // exists
-  if (incoming.weight_division) {
-    // is a string
-    if (typeof incoming.weight_division !== 'string') {
-      result.errors.push(
-        `'weight_division' property should be of type 'string', instead recieved '${typeof incoming.image}'`
-      )
-    }
+//     // conforms to character limit
+//     if (incoming.image.length > pathCharLimit) {
+//       result.errors.push(
+//         `'image' property exceeds character limit of ${pathCharLimit}`
+//       )
+//     }
+//   }
 
-    if (!weightDivisions.includes(incoming.weight_division)) {
-      result.errors.push(
-        `'weight_division' property is not valid. Valid options are; ${validDivs} (case sensitive)`
-      )
-    }
-  }
+//   // Weight_division property (optional)
+//   // exists
+//   if (incoming.weight_division) {
+//     // is a string
+//     if (typeof incoming.weight_division !== 'string') {
+//       result.errors.push(
+//         `'weight_division' property should be of type 'string', instead recieved '${typeof incoming.image}'`
+//       )
+//     }
 
-  // Disqualified property (optional)
-  // exists
-  if (incoming.disqualified) {
-    // is a boolean
-    if (typeof incoming.disqualified !== 'boolean') {
-      result.errors.push(
-        `'disqualified' property should be of type 'boolean', instead recieved '${typeof incoming.disqualified}'`
-      )
-    }
-  }
+//     if (!weightDivisions.includes(incoming.weight_division)) {
+//       result.errors.push(
+//         `'weight_division' property is not valid. Valid options are; ${validDivs} (case sensitive)`
+//       )
+//     }
+//   }
 
-  // Is_deleted property (optional)
-  // exists
-  if (incoming.is_deleted) {
-    // is a boolean
-    if (typeof incoming.is_deleted !== 'boolean') {
-      result.errors.push(
-        `'is_deleted' property should be of type 'boolean', instead recieved '${typeof incoming.is_deleted}'`
-      )
-    }
-  }
+//   // Disqualified property (optional)
+//   // exists
+//   if (incoming.disqualified) {
+//     // is a boolean
+//     if (typeof incoming.disqualified !== 'boolean') {
+//       result.errors.push(
+//         `'disqualified' property should be of type 'boolean', instead recieved '${typeof incoming.disqualified}'`
+//       )
+//     }
+//   }
 
-  // Pass if no errors
-  if (!result.errors[0]) {
-    result.pass = true
-    return result
-  }
+//   // Is_deleted property (optional)
+//   // exists
+//   if (incoming.is_deleted) {
+//     // is a boolean
+//     if (typeof incoming.is_deleted !== 'boolean') {
+//       result.errors.push(
+//         `'is_deleted' property should be of type 'boolean', instead recieved '${typeof incoming.is_deleted}'`
+//       )
+//     }
+//   }
 
-  return result
-}
+//   // Pass if no errors
+//   if (!result.errors[0]) {
+//     result.pass = true
+//     return result
+//   }
+
+//   return result
+// }

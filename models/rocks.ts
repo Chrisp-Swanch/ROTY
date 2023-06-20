@@ -1,23 +1,23 @@
-export interface RockModel {
+export interface RockSnakeCase {
   id: number
-  createdAt: string
-  ownerId: number
+  created_at: string
+  owner_id: number
   name: string
   description: string
   image: string
-  weightDivision: string
+  weight_division: string
   disqualified: boolean
-  isDeleted: boolean
+  is_deleted: boolean
 }
 
-export interface NewRockModel {
+export interface New {
   owner_id: number
   name: string
   description: string
   image: string | null
   weight_division: string
 }
-export interface UpdateRockModel {
+export interface Update {
   name?: string
   description?: string
   image?: string | null

@@ -1,4 +1,4 @@
-export interface UserModelSnakeCase {
+export interface UserSnakeCase {
   id: number
   created_at: string
   name: string
@@ -7,13 +7,13 @@ export interface UserModelSnakeCase {
   is_deleted: boolean
 }
 
-export interface NewUserModel {
+export interface New {
   name: string
   profile_image?: string | null
   previous_winner?: boolean
 }
 
-export interface UpdateUserModel {
+export interface Update {
   name?: string
   profile_image?: string | null
   previous_winner?: boolean
