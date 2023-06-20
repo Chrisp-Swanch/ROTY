@@ -9,10 +9,10 @@ exports.up = function (knex) {
       table.timestamp('created_at').defaultTo(Date.now())
       table.integer('owner_id')
       table.string('name')
-      table.string('description')
+      table.string('description').defaultTo(null)
       table.string('image').defaultTo(null)
       table.string('weight_division')
-      table.boolean('disqualified')
+      table.boolean('disqualified').defaultTo(false)
       table.boolean('is_deleted').defaultTo(false)
     })
     .then(() => {

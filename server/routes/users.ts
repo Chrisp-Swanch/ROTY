@@ -34,11 +34,19 @@ router.get('/:id', async (req, res) => {
 // POST
 // Add a new user
 router.post('/', async (req, res) => {
-  const newUser = req.body as UserModels.New
+  let newUser = req.body as UserModels.New
 
   if (!validate(checkNewUser(newUser))) {
     res.sendStatus(400)
     return
+  }
+
+  // set profile image to null if blank string
+  if (newUser.profile_image === '') {
+    newUser = {
+      ...newUser,
+      profile_image: null,
+    }
   }
 
   // call the database
@@ -61,9 +69,8 @@ router.patch('/:id', async (req, res) => {
     return
   }
 
-  // set image to default if overwritten with null, or blank
-  const image = newUser.profile_image
-  if (image === null || image === '') {
+  // set profile image to null if blank string
+  if (newUser.profile_image === '') {
     newUser = {
       ...newUser,
       profile_image: null,

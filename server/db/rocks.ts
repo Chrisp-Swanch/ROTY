@@ -9,12 +9,7 @@ const db = connection
 export function addRock(
   rockData: RockModels.New
 ): Promise<RockModels.RockSnakeCase[]> {
-  return db('rocks')
-    .insert({
-      ...rockData,
-      created_at: Number(new Date(Date.now())),
-    })
-    .returning('*')
+  return db('rocks').insert(rockData).returning('*')
 }
 
 // Rocks - Read

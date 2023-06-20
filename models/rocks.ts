@@ -13,13 +13,13 @@ export interface RockSnakeCase {
 export interface New {
   owner_id: number
   name: string
-  description: string
-  image: string | null
+  description?: string | null
+  image?: string | null
   weight_division: string
 }
 export interface Update {
   name?: string
-  description?: string
+  description?: string | null
   image?: string | null
   weight_division?: string
   disqualified?: boolean

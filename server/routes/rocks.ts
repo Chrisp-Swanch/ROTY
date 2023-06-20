@@ -1,13 +1,10 @@
 import express from 'express'
-import { NewRockModel } from '../../models/rocks'
+import * as RockModels from '../../models/rocks'
 import { checkNewRock, checkUpdateRock, validate } from '../server-utils'
 
 const router = express.Router()
 
 import * as db from '../db/rocks'
-
-// VARIABLES
-const noImagePath = '/images/icon-no-image.svg'
 
 // GET
 // Get all rocks
@@ -37,33 +34,33 @@ router.get('/:id', async (req, res) => {
 // POST
 // Add a new rock
 router.post('/', async (req, res) => {
-  const newRock = req.body as NewRockModel
+  let newRock = req.body as RockModels.New
 
   if (!validate(checkNewRock(newRock))) {
-    res.sendStatus(500)
+    res.sendStatus(400)
     return
   }
 
-  // set defaults for optional key
-  let image = noImagePath
-
-  // set optional key if it exists
-  if (newRock.image) {
-    image = newRock.image
+  // set image to default if blank string
+  if (newRock.image === '') {
+    newRock = {
+      ...newRock,
+      image: null,
+    }
   }
 
-  // create the final new rock object
-  const addRock = {
-    ...newRock,
-    image,
-    disqualified: false,
-    is_deleted: false,
+  // set description to null if blank string
+  if (newRock.description === '') {
+    newRock = {
+      ...newRock,
+      description: null,
+    }
   }
 
   // call the database
-  const rock = await db.addRock(addRock)
+  const rock = await db.addRock(newRock)
   try {
-    res.json(rock[0])
+    res.json(rock)
   } catch (err) {
     res.sendStatus(500)
   }
@@ -73,26 +70,33 @@ router.post('/', async (req, res) => {
 // Update rock
 router.patch('/:id', async (req, res) => {
   const id = Number(req.params.id)
-  let newRock = req.body
+  let newRock = req.body as RockModels.Update
 
   if (!validate(checkUpdateRock(newRock))) {
-    res.sendStatus(500)
+    res.sendStatus(400)
     return
   }
 
-  // set image to default if overwritten with null, or blank
-  const image = newRock.image
-  if (image === null || image === '') {
+  // set image to null if blank string
+  if (newRock.image === '') {
     newRock = {
       ...newRock,
-      image: noImagePath,
+      image: null,
+    }
+  }
+
+  // set description to null if blank string
+  if (newRock.description === '') {
+    newRock = {
+      ...newRock,
+      description: null,
     }
   }
 
   // call the database
   const rock = await db.updateRock(newRock, id)
   try {
-    res.json(rock[0])
+    res.json(rock)
   } catch (err) {
     res.sendStatus(500)
   }

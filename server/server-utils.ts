@@ -58,7 +58,6 @@ const weightDivisions = [
   'Heavyweight',
   'Super Heavyweight',
 ] // Valid weight divisions
-const validDivs = arrayToString(weightDivisions, 'and')
 
 //-----------------------------------
 // FUNCTIONS TO CHECK KEYS AND TYPES
@@ -143,6 +142,34 @@ function checkCharLimit(key: string, value: string, limit: number): Result {
   }
   if (value.length > limit) {
     result.errors.push(`'${key}' property exceeds character limit of ${limit}`)
+  }
+
+  // Pass if no errors
+  if (!result.errors[0]) {
+    result.pass = true
+    return result
+  }
+  return result
+}
+
+// Check that strings conform to specific accepted strings
+function checkAcceptedString(
+  key: string,
+  value: string,
+  accepted: string[]
+): Result {
+  const result: Result = {
+    pass: false,
+    errors: [],
+  }
+
+  if (!accepted.includes(value)) {
+    result.errors.push(
+      `'${key}' property is not valid. Valid options are; ${arrayToString(
+        accepted,
+        'and'
+      )} (case sensitive)`
+    )
   }
 
   // Pass if no errors
@@ -330,16 +357,16 @@ export function checkUpdateUser(incoming: UserModels.Update): Result {
 // Models and their characteristics
 
 // interface RockModels.New {
-//   owner_id: number // Is number
+//   owner_id: number //
 //   name: string // Character limit
-//   description: string // Character limit
-//   image: string | null // Character limit
+//   description?: string | null // Character limit
+//   image?: string | null // Character limit
 //   weight_division: string // Valid option
 // }
 
 // interface RockModels.Update {
 //   name?: string // Character limit
-//   description?: string // Character limit
+//   description?: string | null // Character limit
 //   image?: string // Character limit
 //   weight_division?: string // Valid option
 //   disqualified?: boolean //
@@ -355,14 +382,72 @@ export function checkNewRock(incoming: RockModels.New): Result {
     errors: [],
   }
 
+  // Type
+  // valid keys and their types
+  const template = {
+    owner_id: 'number',
+    name: 'string',
+    description: ['string', 'null'],
+    image: ['string', 'null'],
+    weight_division: 'string',
+  }
 
-  
+  // keys with character limits
+  type Limits = {
+    name: number
+    description: number
+    image: number
+  }
+  const limits: Limits = {
+    name: nameCharLimit,
+    description: descriptionCharLimit,
+    image: pathCharLimit,
+  }
 
-  // Weight_division property
-  if (!weightDivisions.includes(incoming.weight_division)) {
-    result.errors.push(
-      `'weight_division' property is not valid. Valid options are; ${validDivs} (case sensitive)`
-    )
+  // required keys, valid keys, keys in request, keys with character limits
+  const requiredKeys = ['owner_id', 'name', 'weight_division']
+  const validKeys = Object.keys(template)
+  const requestKeys = Object.keys(incoming)
+  const limitKeys = Object.keys(limits)
+
+  // Request
+  // has all required, and only valid keys
+  const keyCheck = checkKeys(incoming, requiredKeys, validKeys)
+  if (keyCheck.pass === false) return keyCheck as Result
+
+  // each value has a valid type
+  for (let i = 0; i < requestKeys.length; i++) {
+    const key = requestKeys[i] as keyof RockModels.New
+    const { pass, errors } = checkType(key, typeof incoming[key], template[key])
+    if (!pass) {
+      result.errors.push(errors[0])
+    }
+  }
+
+  // keys conform to character limits
+  for (let i = 0; i < limitKeys.length; i++) {
+    const key = limitKeys[i] as keyof Limits
+    const val = key as keyof RockModels.New
+    if (incoming[val]) {
+      const { pass, errors } = checkCharLimit(
+        key,
+        incoming[val] as string,
+        limits[key]
+      )
+      if (!pass) {
+        result.errors.push(errors[0])
+      }
+    }
+  }
+
+  // keys conform to accepted set of values
+  const { pass, errors } = checkAcceptedString(
+    'weight_division',
+    incoming.weight_division,
+    weightDivisions
+  )
+  if (!pass) {
+    result.errors.push(errors[0])
   }
 
   // Pass if no errors
@@ -379,111 +464,111 @@ export function checkNewRock(incoming: RockModels.New): Result {
 /////////////////////////////////////////////
 /////////////////////////////////////////////
 
-// // UpdateRockModel
-// export function checkUpdateRock(incoming: RockModels.Update): Result {
-//   const result: Result = {
-//     pass: false,
-//     errors: [],
-//   }
+// UpdateRockModel
+export function checkUpdateRock(incoming: RockModels.Update): Result {
+  const result: Result = {
+    pass: false,
+    errors: [],
+  }
 
-//   // Name property (optional)
-//   // exists
-//   if (incoming.name) {
-//     // is a string
-//     if (typeof incoming.name !== 'string') {
-//       result.errors.push(
-//         `'name' property should be of type 'string', instead recieved '${typeof incoming.name}'`
-//       )
-//     }
+  // Name property (optional)
+  // exists
+  if (incoming.name) {
+    // is a string
+    if (typeof incoming.name !== 'string') {
+      result.errors.push(
+        `'name' property should be of type 'string', instead recieved '${typeof incoming.name}'`
+      )
+    }
 
-//     // conforms to character limit
-//     if (incoming.name.length > nameCharLimit) {
-//       result.errors.push(
-//         `'name' property exceeds character limit of ${nameCharLimit}`
-//       )
-//     }
-//   }
+    // conforms to character limit
+    if (incoming.name.length > nameCharLimit) {
+      result.errors.push(
+        `'name' property exceeds character limit of ${nameCharLimit}`
+      )
+    }
+  }
 
-//   // Description property (optional)
-//   // exists
-//   if (incoming.description) {
-//     // is a string
-//     if (typeof incoming.description !== 'string') {
-//       result.errors.push(
-//         `'description' property should be of type 'string', instead recieved '${typeof incoming.description}'`
-//       )
-//     }
+  // Description property (optional)
+  // exists
+  if (incoming.description) {
+    // is a string
+    if (typeof incoming.description !== 'string') {
+      result.errors.push(
+        `'description' property should be of type 'string', instead recieved '${typeof incoming.description}'`
+      )
+    }
 
-//     // conforms to character limit
-//     if (incoming.description.length > descriptionCharLimit) {
-//       result.errors.push(
-//         `'description' property exceeds character limit of ${nameCharLimit}`
-//       )
-//     }
-//   }
+    // conforms to character limit
+    if (incoming.description.length > descriptionCharLimit) {
+      result.errors.push(
+        `'description' property exceeds character limit of ${nameCharLimit}`
+      )
+    }
+  }
 
-//   // Image property (optional)
-//   // exists
-//   if (incoming.image) {
-//     // is a string or null
-//     if (typeof incoming.image !== 'string' && typeof incoming.image !== null) {
-//       result.errors.push(
-//         `'image' property should be of type 'string' or 'null', instead recieved '${typeof incoming.image}'`
-//       )
-//     }
+  // Image property (optional)
+  // exists
+  if (incoming.image) {
+    // is a string or null
+    if (typeof incoming.image !== 'string' && typeof incoming.image !== null) {
+      result.errors.push(
+        `'image' property should be of type 'string' or 'null', instead recieved '${typeof incoming.image}'`
+      )
+    }
 
-//     // conforms to character limit
-//     if (incoming.image.length > pathCharLimit) {
-//       result.errors.push(
-//         `'image' property exceeds character limit of ${pathCharLimit}`
-//       )
-//     }
-//   }
+    // conforms to character limit
+    if (incoming.image.length > pathCharLimit) {
+      result.errors.push(
+        `'image' property exceeds character limit of ${pathCharLimit}`
+      )
+    }
+  }
 
-//   // Weight_division property (optional)
-//   // exists
-//   if (incoming.weight_division) {
-//     // is a string
-//     if (typeof incoming.weight_division !== 'string') {
-//       result.errors.push(
-//         `'weight_division' property should be of type 'string', instead recieved '${typeof incoming.image}'`
-//       )
-//     }
+  // Weight_division property (optional)
+  // exists
+  if (incoming.weight_division) {
+    // is a string
+    if (typeof incoming.weight_division !== 'string') {
+      result.errors.push(
+        `'weight_division' property should be of type 'string', instead recieved '${typeof incoming.image}'`
+      )
+    }
 
-//     if (!weightDivisions.includes(incoming.weight_division)) {
-//       result.errors.push(
-//         `'weight_division' property is not valid. Valid options are; ${validDivs} (case sensitive)`
-//       )
-//     }
-//   }
+    // if (!weightDivisions.includes(incoming.weight_division)) {
+    //   result.errors.push(
+    //     `'weight_division' property is not valid. Valid options are; ${validDivs} (case sensitive)`
+    //   )
+    // }
+  }
 
-//   // Disqualified property (optional)
-//   // exists
-//   if (incoming.disqualified) {
-//     // is a boolean
-//     if (typeof incoming.disqualified !== 'boolean') {
-//       result.errors.push(
-//         `'disqualified' property should be of type 'boolean', instead recieved '${typeof incoming.disqualified}'`
-//       )
-//     }
-//   }
+  // Disqualified property (optional)
+  // exists
+  if (incoming.disqualified) {
+    // is a boolean
+    if (typeof incoming.disqualified !== 'boolean') {
+      result.errors.push(
+        `'disqualified' property should be of type 'boolean', instead recieved '${typeof incoming.disqualified}'`
+      )
+    }
+  }
 
-//   // Is_deleted property (optional)
-//   // exists
-//   if (incoming.is_deleted) {
-//     // is a boolean
-//     if (typeof incoming.is_deleted !== 'boolean') {
-//       result.errors.push(
-//         `'is_deleted' property should be of type 'boolean', instead recieved '${typeof incoming.is_deleted}'`
-//       )
-//     }
-//   }
+  // Is_deleted property (optional)
+  // exists
+  if (incoming.is_deleted) {
+    // is a boolean
+    if (typeof incoming.is_deleted !== 'boolean') {
+      result.errors.push(
+        `'is_deleted' property should be of type 'boolean', instead recieved '${typeof incoming.is_deleted}'`
+      )
+    }
+  }
 
-//   // Pass if no errors
-//   if (!result.errors[0]) {
-//     result.pass = true
-//     return result
-//   }
+  // Pass if no errors
+  if (!result.errors[0]) {
+    result.pass = true
+    return result
+  }
 
-//   return result
-// }
+  return result
+}
