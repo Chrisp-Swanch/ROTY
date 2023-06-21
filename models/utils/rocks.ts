@@ -5,10 +5,12 @@ import {
   checkCharLimit,
   checkAcceptedString,
 } from './helpers'
-import { pathCharLimit,
+import {
+  pathCharLimit,
   nameCharLimit,
   descriptionCharLimit,
-  weightDivisions } from './constraints'
+  weightDivisions,
+} from './constraints'
 import * as RockModels from '../interfaces/rocks'
 
 //---------------------------------

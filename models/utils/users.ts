@@ -105,11 +105,6 @@ export function checkUpdateUser(incoming: UserModels.Update): Result {
     errors: [],
   }
 
-  if (!incoming) {
-    result.errors.push(`no body given in request`)
-    return result
-  }
-
   // Type
   // valid keys and their types
   const template = {
