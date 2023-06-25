@@ -1,10 +1,18 @@
+import { Route, Routes } from 'react-router-dom'
+import Home from './Home'
+import Nav from './Nav'
+
 function App() {
   return (
     <>
-      <header className="header">
-        <h1>My Collection</h1>
-      </header>
-      <section className="main">{/* add your code here */}</section>
+      <Nav />
+      <section className="main">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/users" element={<Users />} /> */}
+          {/* <Route path='/rocks' element={<Rocks />} /> */}
+        </Routes>
+      </section>
     </>
   )
 }
