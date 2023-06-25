@@ -1,0 +1,73 @@
+// Imports
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,500;0,700;1,300;1,500;1,700&display=swap');
+
+// Variables
+
+// ------
+// Colors
+// ------
+
+$bg-dark: #7A7746;
+$bg-transp: #57565192;
+$bg-light: #f5f3e4;
+
+
+$highlight: #C7C171;
+$alt-highlight: #c5692b;
+
+$text-main: #FBF9DA;
+$text-dark: rgb(31, 30, 30);
+
+// Fonts
+$font-basic: 'Roboto', monospace;
+$font-headings: 'DM Serif Display', serif;
+
+// ------
+// Mixins
+// ------
+
+@mixin shadow() {
+  box-shadow: 0px 3px 3px #19191a;
+}
+
+@mixin underline() {
+  text-decoration-line: underline;
+  text-decoration-color: $alt-highlight;
+  text-decoration-thickness: 3px;
+}
+
+// ------
+//  Media
+// ------
+
+$breakpoint-xsmall: 400px;
+$breakpoint-small: 576px;
+$breakpoint-medium: 768px;
+$breakpoint-large: 1024px;
+$breakpoint-extra-large: 1300px;
+
+@mixin max-width($breakpoint) {
+  @if ($breakpoint == xsmall) {
+    @media (max-width: $breakpoint-xsmall) {
+      @content;
+    }
+  } @else if ($breakpoint == small) {
+    @media (max-width: $breakpoint-small) {
+      @content;
+    }
+  } @else if ($breakpoint == medium) {
+    @media (max-width: $breakpoint-medium) {
+      @content;
+    }
+  } @else if ($breakpoint == large) {
+    @media (max-width: $breakpoint-large) {
+      @content;
+    }
+  } @else if ($breakpoint == xlarge) {
+    @media (max-width: $breakpoint-extra-large) {
+      @content;
+    }
+  } @else {
+    @error "UNKNOWN MEDIA BREAKPOINT #{$breakpoint}";
+  }
+}
