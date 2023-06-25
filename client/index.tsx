@@ -1,21 +1,23 @@
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
 import store from './store'
 
-import router from './router'
-import { RouterProvider } from 'react-router-dom'
+import App from './components/App'
 
 document.addEventListener('DOMContentLoaded', () => {
   createRoot(document.getElementById('app') as HTMLElement).render(
     // <Auth0Provider
-    // domain='facil-joshliu.au.auth0.com'
-    // clientId='LPmXLj6Y5eNaXiEo3BA7MEEwJWNkH2Sq'
+    // domain=''
+    // clientId=''
     // redirectUri={window.location.origin}
-    // audience='https://mooo-vies/api'
+    // audience=''
     // >
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <BrowserRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </BrowserRouter>
     // </Auth0Provider>
   )
 })

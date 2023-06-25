@@ -9,7 +9,7 @@ function App() {
       <section className="main">
         <Routes>
           <Route path="/" element={<Home />} />
-          {/* <Route path='/users' element={<Users />} /> */}
+          {/* <Route path="/users" element={<Users />} /> */}
           {/* <Route path='/rocks' element={<Rocks />} /> */}
         </Routes>
       </section>

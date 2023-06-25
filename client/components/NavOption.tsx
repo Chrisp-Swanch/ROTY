@@ -5,7 +5,7 @@ function NavOption(option: NavModels.Option) {
   const { display, linkTo } = option
   return (
     <>
-      <Link to={linkTo} style={{ textDecoration: 'none' }}>
+      <Link key={linkTo} to={linkTo} style={{ textDecoration: 'none' }}>
         <div className="nav__option__text">{display}</div>
       </Link>
     </>
