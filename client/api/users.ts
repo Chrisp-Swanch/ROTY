@@ -18,7 +18,8 @@ export async function postUser(newUser: UserModels.New, token?: string) {
 }
 
 export async function patchUser(id: number, newUser: UserModels.Update) {
-  await request.patch(`${usersUrl}/${id}`).send({newUser})
+  const res = await request.patch(`${usersUrl}/${id}`).send({newUser})
+  return res.body
 }
 
 export async function removeUser(id: number) {
