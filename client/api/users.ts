@@ -9,11 +9,10 @@ export async function fetchUsers() {
   return users
 }
 
-export async function postUser(newUser: UserModels.New, token?: string) {
-  const res = await request
-    .post(usersUrl)
-    // .set('Authorization', `Bearer ${token}`)
-    .send(newUser)
+// Eventually include token as a param here
+export async function postUser(newUser: UserModels.New) {
+  const res = await request.post(usersUrl).send(newUser)
+  // .set('Authorization', `Bearer ${token}`)
   const newUserResponse = res.body
   return newUserResponse
 }
