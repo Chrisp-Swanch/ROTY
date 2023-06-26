@@ -1,7 +1,7 @@
 import { useAppSelector } from '../hooks/hooks'
 import * as UserModels from '../../models/interfaces/users'
 
-import SingleUser from './UserCard'
+import SingleUser from './SingleUser'
 
 function Users() {
   const userList = useAppSelector(
@@ -10,7 +10,7 @@ function Users() {
 
   return (
     <>
-      <h1>Meet the competition:</h1>
+      <h1>Meet the Competition:</h1>
       <div className="users_container">
         {userList.map((user) => {
           return <SingleUser key={user.id} user={user} />
