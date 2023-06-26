@@ -5,6 +5,7 @@ import { useAppDispatch } from '../hooks/hooks'
 import Home from './Home'
 import Nav from './Nav'
 import { getUsersThunk } from '../actions/users'
+import Users from './Users'
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
       <section className="main">
         <Routes>
           <Route path="/" element={<Home />} />
-          {/* <Route path="/users" element={<Users />} /> */}
+          <Route path="/users" element={<Users />} />
           {/* <Route path='/rocks' element={<Rocks />} /> */}
         </Routes>
       </section>
