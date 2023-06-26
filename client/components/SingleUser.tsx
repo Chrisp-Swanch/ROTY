@@ -5,10 +5,14 @@ interface Props {
 }
 
 function SingleUser({ user }: Props) {
+  const { name, profile_image, previous_winner } = user
+
   return (
-    <>
-      <h1>{user.name}</h1>
-    </>
+    <div className="user_card">
+      <h1>{name}</h1>
+      <img src={profile_image} alt="" />
+      {Boolean(previous_winner)  && <p>Defending Champion!</p>}
+    </div>
   )
 }
 

@@ -35,3 +35,18 @@ body {
     }
   }
 }
+
+.user_card {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin: 30px;
+  padding: 20px;
+  background-color: $bg-transp;
+  max-width: 400px;
+  min-height: 350px;
+
+  img {
+    max-width: 300px;
+  }
+}
