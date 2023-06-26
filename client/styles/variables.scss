@@ -16,7 +16,7 @@ $highlight: #C7C171;
 $alt-highlight: #c5692b;
 
 $text-main: #FBF9DA;
-$text-dark: rgb(31, 30, 30);
+$text-dark: rgb(44, 42, 42);
 
 // Fonts
 $font-basic: 'Roboto', monospace;
@@ -26,8 +26,12 @@ $font-headings: 'DM Serif Display', serif;
 // Mixins
 // ------
 
-@mixin shadow() {
+@mixin shadow-small() {
   box-shadow: 0px 3px 3px #19191a;
+}
+
+@mixin shadow-large() {
+  box-shadow: 3px 5px 5px $bg-transp;
 }
 
 @mixin underline() {
