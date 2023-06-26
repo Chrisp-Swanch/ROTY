@@ -53,7 +53,7 @@ router.post('/', async (req, res) => {
   // call the database
   const user = await db.addUser(newUser)
   try {
-    res.json(user)
+    res.json(user[0])
   } catch (err) {
     res.sendStatus(500)
   }

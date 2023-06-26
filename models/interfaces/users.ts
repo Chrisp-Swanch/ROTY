@@ -23,6 +23,6 @@ export interface Update {
 export type Action =
   | { type: 'ERROR'; payload: string }
   | { type: 'SET_USERS'; payload: UserSnakeCase[] }
-  | { type: 'ADD_USER'; payload: New }
-  | { type: 'UPDATE_USER'; payload: Update }
+  | { type: 'ADD_USER'; payload: UserSnakeCase }
+  | { type: 'UPDATE_USER'; payload: UserSnakeCase }
   | { type: 'DEL_USER'; payload: number }

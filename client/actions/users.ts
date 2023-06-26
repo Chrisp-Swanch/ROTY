@@ -31,17 +31,17 @@ export function setUsers(users: UserSnakeCase[]): Action {
 }
 
 // Do I need a simple action for this?
-export function addUser(user: New): Action {
+export function addUser(user: UserSnakeCase): Action {
   return {
     type: ADD_USER,
     payload: user,
   }
 }
 
-export function updateUser(id: number, user: UserSnakeCase): Action {
+export function updateUser(user: UserSnakeCase): Action {
   return {
     type: UPDATE_USER,
-    payload: user,
+    payload: user
   }
 }
 
@@ -81,7 +81,7 @@ export function updateUserThunk(id: number, user: Update): ThunkAction {
   return async (dispatch) => {
     try {
       const newUser = await api.patchUser(id, user)
-      dispatch(updateUser(id, newUser))
+      dispatch(updateUser(newUser))
     } catch (err) {
       dispatch(error(String(err)))
     }

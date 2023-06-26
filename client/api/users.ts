@@ -1,5 +1,5 @@
-import request from "superagent";
-import * as UserModels from "../../models/interfaces/users"
+import request from 'superagent'
+import * as UserModels from '../../models/interfaces/users'
 
 const usersUrl = '/api/v1/users'
 
@@ -10,15 +10,16 @@ export async function fetchUsers() {
 }
 
 export async function postUser(newUser: UserModels.New, token?: string) {
-  const res = await request.post(usersUrl)
-  // .set('Authorization', `Bearer ${token}`)
-  .send(newUser)
+  const res = await request
+    .post(usersUrl)
+    // .set('Authorization', `Bearer ${token}`)
+    .send(newUser)
   const newUserResponse = res.body
   return newUserResponse
 }
 
 export async function patchUser(id: number, newUser: UserModels.Update) {
-  const res = await request.patch(`${usersUrl}/${id}`).send({newUser})
+  const res = await request.patch(`${usersUrl}/${id}`).send({ newUser })
   return res.body
 }
 
