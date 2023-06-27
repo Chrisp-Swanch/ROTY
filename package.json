@@ -4,7 +4,6 @@
   "description": "Build a fullstack app",
   "repository": "https://https://github.com/dev-academy-challenges/my-fullstack-collection",
   "main": "server/index.ts",
-  "type": "module",
   "scripts": {
     "build": "run-s build:client build:server",
     "build:client": "vite build",
