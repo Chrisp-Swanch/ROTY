@@ -79,7 +79,7 @@ export function updateRockThunk(id: number, rock: Update): ThunkAction {
   return async (dispatch) => {
     try {
       const newRock = await api.patchRock(id, rock)
-      dispatch(updateRock(newRock))
+      dispatch(updateRock(newRock[0]))
     } catch (err) {
       dispatch(error(String(err)))
     }

@@ -22,6 +22,8 @@ export default function rocksReducers(state = initialState, action: Action) {
       return state.map((rock) => {
         if (rock.id === payload.id) {
           return payload
+        } else {
+          return rock
         }
       })
     case DEL_ROCK:

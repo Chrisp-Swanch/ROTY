@@ -4,7 +4,7 @@
 
 // Set constraints on values coming into the databse
 
-export const pathCharLimit = 5000 // character limit for url strings
+export const pathCharLimit = 10000 // character limit for url strings
 export const nameCharLimit = 40 // character limit for names
 export const descriptionCharLimit = 400 // character limit for descriptions
 export const weightDivisions = [
