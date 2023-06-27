@@ -51,6 +51,18 @@
     "nock": "^13.3.0",
     "nodemon": "^2.0.15",
     "npm-run-all": "^4.1.5",
+    "@redux-devtools/extension": "^3.2.3",
+    "camelcase": "^7.0.1"
+  },
+  "dependencies": {
+    "compressible": "^2.0.18",
+    "compression": "^1.7.4",
+    "express": "^4.17.2",
+    "knex": "^2.3.0",
+    "snake-case": "^3.0.4",
+    "sqlite3": "^5.1.2",
+    "superagent": "7.1.1",
+    "ts-node": "^10.9.1",
     "react": "^18.0.2",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.4",
@@ -62,19 +74,6 @@
     "typescript": "~4.8.4",
     "vite": "^4.3.3",
     "vitest": "^0.30.1"
-  },
-  "dependencies": {
-    "@devacademy/eslint-config": "^1.8.0",
-    "@redux-devtools/extension": "^3.2.3",
-    "camelcase": "^7.0.1",
-    "compressible": "^2.0.18",
-    "compression": "^1.7.4",
-    "express": "^4.17.2",
-    "knex": "^2.3.0",
-    "snake-case": "^3.0.4",
-    "sqlite3": "^5.1.2",
-    "superagent": "7.1.1",
-    "ts-node": "^10.9.1"
   },
   "prettier": {
     "semi": false,
