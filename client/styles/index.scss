@@ -58,7 +58,6 @@ h1 {
 .signup_form {
   @include card-defaults;
 
-
   min-width: 600px;
 
   &__input {

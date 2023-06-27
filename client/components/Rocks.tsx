@@ -13,7 +13,9 @@ function Rocks() {
       <h1>This Year&apos;s Entries:</h1>
       <div className="cards_container">
         {rockList.map((rock) => {
-          return <SingleRock key={rock.id} rock={rock}/>
+          if (Boolean(rock.is_deleted) !== true) {
+            return <SingleRock key={rock.id} rock={rock} />
+          }
         })}
       </div>
     </>
