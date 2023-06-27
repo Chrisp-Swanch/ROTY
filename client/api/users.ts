@@ -18,7 +18,7 @@ export async function postUser(newUser: UserModels.New) {
 }
 
 export async function patchUser(id: number, newUser: UserModels.Update) {
-  const res = await request.patch(`${usersUrl}/${id}`).send({ newUser })
+  const res = await request.patch(`${usersUrl}/${id}`).send(newUser)
   return res.body
 }
 

@@ -18,7 +18,7 @@ export async function postRock(newRock: RockModels.New) {
 }
 
 export async function patchRock(id: number, newRock: RockModels.Update) {
-  const res = await request.patch(`${rocksUrl}/${id}`).send({ newRock })
+  const res = await request.patch(`${rocksUrl}/${id}`).send(newRock)
   return res.body
 }
 
