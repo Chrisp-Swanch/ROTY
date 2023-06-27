@@ -13,7 +13,7 @@ function Rocks() {
       <h1>This Year&apos;s Entries:</h1>
       <div className="cards_container">
         {rockList.map((rock) => {
-          return <SingleRock key={rock.id} rock={rock} />
+          return <SingleRock key={rock.id} rock={rock}/>
         })}
       </div>
     </>
