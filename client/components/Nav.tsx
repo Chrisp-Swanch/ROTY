@@ -6,16 +6,16 @@ const options: NavModels.Option[] = [
     display: 'Home',
     linkTo: '/',
   },
-  {
-    display: 'Sign Up',
-    linkTo: '/signup',
-  },
+  // {
+  //   display: 'Sign Up',
+  //   linkTo: '/signup',
+  // },
   {
     display: 'Competitors',
     linkTo: '/users',
   },
   {
-    display: 'Rocks',
+    display: 'My Rocks',
     linkTo: '/rocks',
   },
 ]

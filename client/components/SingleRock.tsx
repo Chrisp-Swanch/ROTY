@@ -10,7 +10,7 @@ function SingleRock({ rock }: Props) {
   return (
     <>
       {Boolean(!disqualified) && (
-        <div className="user_card">
+        <div className="rock_card">
           <h1>{name}</h1>
           <div className="line"></div>
           <img src={image} alt={`${name}`} />
@@ -18,6 +18,7 @@ function SingleRock({ rock }: Props) {
           <p>{description}</p>
         </div>
       )}
+      {/* conditional render if you have authorization to edit the rock */}
     </>
   )
 }

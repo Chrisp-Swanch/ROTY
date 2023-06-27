@@ -13,7 +13,7 @@ function SingleUser({ user }: Props) {
       <h1>{name}</h1>
       <div className="line"></div>
       <img src={profile_image} alt={`${name}`} />
-      <p>View Rocks</p>
+      {/* <p>View Rocks</p> */}
     </div>
   )
 }
