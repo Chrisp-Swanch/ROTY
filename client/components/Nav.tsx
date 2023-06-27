@@ -6,12 +6,16 @@ const options: NavModels.Option[] = [
     display: 'Home',
     linkTo: '/',
   },
+  // {
+  //   display: 'Sign Up',
+  //   linkTo: '/signup',
+  // },
   {
     display: 'Competitors',
     linkTo: '/users',
   },
   {
-    display: 'Rocks',
+    display: 'My Rocks',
     linkTo: '/rocks',
   },
 ]
@@ -23,11 +27,9 @@ function Nav() {
         {options.map((option) => {
           const { display, linkTo } = option
           return (
-            <>
-              <div className="nav__option">
-                <NavOption key={display} display={display} linkTo={linkTo} />
-              </div>
-            </>
+            <div key={display} className="nav__option">
+              <NavOption display={display} linkTo={linkTo} />
+            </div>
           )
         })}
       </nav>

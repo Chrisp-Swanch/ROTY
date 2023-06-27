@@ -25,3 +25,10 @@ export interface Update {
   disqualified?: boolean
   is_deleted?: boolean
 }
+
+export type Action =
+  | { type: 'ERROR'; payload: string }
+  | { type: 'SET_ROCKS'; payload: RockSnakeCase[] }
+  | { type: 'ADD_ROCK'; payload: RockSnakeCase }
+  | { type: 'UPDATE_ROCK'; payload: RockSnakeCase }
+  | { type: 'DEL_ROCK'; payload: number }

@@ -9,9 +9,11 @@ function SingleUser({ user }: Props) {
 
   return (
     <div className="user_card">
+      {Boolean(previous_winner) && <div className="user_card__badge"><p>Previous Winner</p></div>}
       <h1>{name}</h1>
-      <img src={profile_image} alt="" />
-      {Boolean(previous_winner)  && <p>Defending Champion!</p>}
+      <div className="line"></div>
+      <img src={profile_image} alt={`${name}`} />
+      {/* <p>View Rocks</p> */}
     </div>
   )
 }

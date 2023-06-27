@@ -7,8 +7,8 @@
 // Colors
 // ------
 
-$bg-dark: #7A7746;
-$bg-transp: #57565192;
+$bg-main: #7A7746;
+$bg-dark: #555349;
 $bg-light: #f5f3e4;
 
 
@@ -16,24 +16,62 @@ $highlight: #C7C171;
 $alt-highlight: #c5692b;
 
 $text-main: #FBF9DA;
-$text-dark: rgb(31, 30, 30);
+$text-dark: rgb(44, 42, 42);
 
 // Fonts
 $font-basic: 'Roboto', monospace;
 $font-headings: 'DM Serif Display', serif;
 
+$textarea-height: 40px;
+
 // ------
 // Mixins
 // ------
 
-@mixin shadow() {
+@mixin shadow-small() {
   box-shadow: 0px 3px 3px #19191a;
+}
+
+@mixin shadow-large() {
+  box-shadow: 3px 5px 5px $bg-dark;
 }
 
 @mixin underline() {
   text-decoration-line: underline;
   text-decoration-color: $alt-highlight;
   text-decoration-thickness: 3px;
+}
+
+@mixin card-defaults() {
+  font-family: $font-basic;
+  color: $text-main;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin: 30px;
+  padding: 20px;
+  background-color: $bg-dark;
+  border-radius: 10px;
+
+  @include shadow-large;
+
+  h1 {
+    font-size: 2em;
+    margin-top: 0px;
+    margin-bottom: 15px;
+  }
+
+  .line {
+    margin-bottom: 20px;
+    width: 100%;
+    height: 2px;
+    background-color: $text-main;
+  }
+
+  img {
+    max-width: 100%;
+  }
 }
 
 // ------

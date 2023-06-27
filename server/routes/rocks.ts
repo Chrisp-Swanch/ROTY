@@ -61,7 +61,7 @@ router.post('/', async (req, res) => {
   // call the database
   const rock = await db.addRock(newRock)
   try {
-    res.json(rock)
+    res.json(rock[0])
   } catch (err) {
     res.sendStatus(500)
   }

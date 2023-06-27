@@ -10,10 +10,12 @@ function Users() {
 
   return (
     <>
-      <h1>Meet the competition:</h1>
-      {userList.map((user) => {
-        return <SingleUser key={user.id} user={user} />
-      })}
+      <h1>Meet the Competition:</h1>
+      <div className="cards_container">
+        {userList.map((user) => {
+          return <SingleUser key={user.id} user={user} />
+        })}
+      </div>
     </>
   )
 }

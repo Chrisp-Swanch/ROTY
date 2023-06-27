@@ -7,7 +7,6 @@ import {
 import * as api from '../api/users'
 import { ThunkAction } from '../store'
 
-
 export const ERROR = 'ERROR'
 export const SET_USERS = 'SET_USERS'
 export const ADD_USER = 'ADD_USER'
@@ -30,7 +29,6 @@ export function setUsers(users: UserSnakeCase[]): Action {
   }
 }
 
-// Do I need a simple action for this?
 export function addUser(user: UserSnakeCase): Action {
   return {
     type: ADD_USER,
@@ -41,7 +39,7 @@ export function addUser(user: UserSnakeCase): Action {
 export function updateUser(user: UserSnakeCase): Action {
   return {
     type: UPDATE_USER,
-    payload: user
+    payload: user,
   }
 }
 
