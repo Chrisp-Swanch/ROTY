@@ -11,13 +11,13 @@ function Rocks() {
   return (
     <>
       <h1>This Year&apos;s Entries:</h1>
-      <div className="users_container">
-        {userList.map((user) => {
-          return <SingleUser key={user.id} user={user} />
+      <div className="cards_container">
+        {rockList.map((rock) => {
+          return <SingleRock key={rock.id} rock={rock} />
         })}
       </div>
     </>
   )
 }
 
-export default rocks
+export default Rocks

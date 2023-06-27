@@ -11,7 +11,7 @@ function Users() {
   return (
     <>
       <h1>Meet the Competition:</h1>
-      <div className="users_container">
+      <div className="cards_container">
         {userList.map((user) => {
           return <SingleUser key={user.id} user={user} />
         })}

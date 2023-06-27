@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
   // call the database
   const vote = await db.addVote(newVote)
   try {
-    res.json(vote)
+    res.json(vote[0])
   } catch (err) {
     res.sendStatus(500)
   }
