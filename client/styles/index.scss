@@ -52,12 +52,12 @@ h1 {
 }
 
 .cards_container {
-  display: grid;
-  grid-template-columns: auto auto auto auto;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .signup_form {
-  @include card-defaults;
+  // @include card-defaults;
 
   min-width: 600px;
 
@@ -92,7 +92,7 @@ h1 {
 }
 
 .user_card {
-  @include card-defaults;
+  // @include card-defaults;
   
   max-width: 300px;
   min-width: 200px;
@@ -119,10 +119,40 @@ h1 {
 }
 
 .rock_card {
-  @include card-defaults;
-  
+  font-family: $font-basic;
+  color: $text-main;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: left;
+  margin: 30px;
+  padding: 30px;
+  background-color: $bg-dark;
+  border-radius: 10px;
   max-width: 300px;
-  min-width: 200px;
+  aspect-ratio: 9/16;
+  max-height: 400px;
+  overflow: scroll;
+
+  @include shadow-large;
+
+  h1 {
+    font-size: 2em;
+    margin-top: 0px;
+    margin-bottom: 15px;
+  }
+
+  .line {
+    margin-bottom: 20px;
+    width: 100%;
+    height: 2px;
+    background-color: $text-main;
+  }
+
+  img {
+    max-width: 100%;
+  }
 
   button {
     font-family: $font-basic;
@@ -147,6 +177,11 @@ h1 {
   p {
     margin-top: 0px;
   }
+}
+
+.rock-card::before {
+  display: block;
+  padding-bottom: 100%;
 }
 
 .edit_rock_form {
