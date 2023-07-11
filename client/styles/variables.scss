@@ -42,38 +42,6 @@ $textarea-height: 40px;
   text-decoration-thickness: 3px;
 }
 
-@mixin card-defaults() {
-  font-family: $font-basic;
-  color: $text-main;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  margin: 30px;
-  padding: 20px;
-  background-color: $bg-dark;
-  border-radius: 10px;
-
-  @include shadow-large;
-
-  h1 {
-    font-size: 2em;
-    margin-top: 0px;
-    margin-bottom: 15px;
-  }
-
-  .line {
-    margin-bottom: 20px;
-    width: 100%;
-    height: 2px;
-    background-color: $text-main;
-  }
-
-  img {
-    max-width: 100%;
-  }
-}
-
 // ------
 //  Media
 // ------

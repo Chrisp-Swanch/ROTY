@@ -56,6 +56,7 @@ function SingleRock({ rock }: Props) {
   return (
     <>
       <div className="rock_card">
+        <div />
         <h2>{name}</h2>
         <div className="line"></div>
         {!selectedRock && (
