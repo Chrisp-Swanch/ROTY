@@ -1,6 +1,6 @@
 import * as RockModels from '../../models/interfaces/rocks'
 import { ChangeEvent, FormEvent, useState } from 'react'
-import { useAppDispatch } from '../hooks/hooks'
+import { useAppDispatch } from '../hooks/actions'
 import { deleteRockThunk, updateRockThunk } from '../actions/rocks'
 import { Result } from '../../models/utils/helpers'
 import { checkUpdateRock } from '../../models/utils/rocks'

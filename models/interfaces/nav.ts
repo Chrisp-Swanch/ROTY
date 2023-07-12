@@ -1,4 +1,4 @@
 export interface Option {
-  display: string
+  displayText: string
   linkTo: string
 }

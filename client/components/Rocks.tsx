@@ -1,4 +1,4 @@
-import { useAppSelector } from '../hooks/hooks'
+import { useAppSelector } from '../hooks/actions'
 import * as RockModels from '../../models/interfaces/rocks'
 
 import SingleRock from './SingleRock'

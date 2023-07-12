@@ -1,4 +1,4 @@
-import { useAppSelector } from '../hooks/hooks'
+import { useAppSelector } from '../hooks/actions'
 import * as UserModels from '../../models/interfaces/users'
 
 import SingleUser from './SingleUser'

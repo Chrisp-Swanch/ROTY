@@ -1,37 +1,40 @@
 import * as NavModels from '../../models/interfaces/nav'
+import LoginButton from './SignInButton'
 import NavOption from './NavOption'
 
 const options: NavModels.Option[] = [
   {
-    display: 'Home',
+    displayText: 'Home',
     linkTo: '/',
   },
   // {
-  //   display: 'Sign Up',
+  //   displayText: 'Sign Up',
   //   linkTo: '/signup',
   // },
   {
-    display: 'Competitors',
+    displayText: 'Competitors',
     linkTo: '/users',
   },
   {
-    display: 'My Rocks',
+    displayText: 'My Rocks',
     linkTo: '/rocks',
   },
 ]
 
 function Nav() {
+
+
   return (
     <>
       <nav className="nav">
         {options.map((option) => {
-          const { display, linkTo } = option
           return (
-            <div key={display} className="nav__option">
-              <NavOption display={display} linkTo={linkTo} />
+            <div key={option.displayText} className="nav__option">
+              <NavOption option={option} />
             </div>
           )
         })}
+        <LoginButton />
       </nav>
     </>
   )
